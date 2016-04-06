@@ -20,7 +20,7 @@ import com.gmail.trentech.stackban.utils.Resource;
 
 import me.flibio.updatifier.Updatifier;
 
-@Updatifier(repoName = "ProjectPortals", repoOwner = "TrenTech", version = Resource.VERSION)
+@Updatifier(repoName = "StackBan", repoOwner = "TrenTech", version = Resource.VERSION)
 @Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION, authors = Resource.AUTHOR, url = Resource.URL, description = Resource.DESCRIPTION, dependencies = {@Dependency(id = "Updatifier", optional = true)})
 public class Main {
 

@@ -1,0 +1,40 @@
+plugins {
+  id 'java'
+  id 'eclipse'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+version = "0.1.0"
+group = "com.gmail.trentech"
+
+repositories {
+    mavenCentral()
+    maven {
+        name 'Sponge maven repo'
+        url 'http://repo.spongepowered.org/maven'
+    }
+	maven {
+        name 'jitpack.io'
+        url 'https://jitpack.io'
+    }
+}
+
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
+dependencies {
+    compile "org.spongepowered:spongeapi:4.1.0-SNAPSHOT"
+	shade "com.github.Flibio:Updatifier:-SNAPSHOT:api"
+}
+
+jar {
+	sourceSets.main.output
+    configurations.shade.copyRecursive().setTransitive(false).each { artifact ->
+      from (zipTree(artifact))
+    }
+    baseName = 'stackban-4.1.0'
+}

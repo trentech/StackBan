@@ -17,7 +17,7 @@ import com.gmail.trentech.stackban.utils.Help;
 public class CMDRemove implements CommandExecutor {
 
 	public CMDRemove(){
-		Help help = new Help("remove", "remove", " Remove message from broadcast list");
+		Help help = new Help("remove", "remove", " Remove message from broadcast list. use /sban list to view list index");
 		help.setSyntax(" /sban remove <index>\n /b r <index>");
 		help.setExample(" /sban remove 4");
 		help.save();
@@ -50,7 +50,7 @@ public class CMDRemove implements CommandExecutor {
 		
 		configManager.save();
 		
-		src.sendMessage(Text.of(TextColors.GREEN, "Removed ", itemType, " from ban list"));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Removed ", TextColors.YELLOW, itemType, TextColors.DARK_GREEN, " from ban list"));
 		
 		return CommandResult.success();
 	}

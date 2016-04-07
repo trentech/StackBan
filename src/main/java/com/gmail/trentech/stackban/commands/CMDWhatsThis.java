@@ -19,7 +19,7 @@ import com.gmail.trentech.stackban.utils.Help;
 public class CMDWhatsThis implements CommandExecutor {
 
 	public CMDWhatsThis(){
-		Help help = new Help("whatsthis", "whatsthis", " If you are not sure the itemtype or varient of an item, use this command to find out");
+		Help help = new Help("whatsthis", "whatsthis", " If you are not sure the itemtype or varient of an item, use this command to find out the item that is in players hand");
 		help.setSyntax(" /whatsthis\n /wt");
 		help.setExample(" /whatsthis");
 		help.save();
@@ -52,7 +52,7 @@ public class CMDWhatsThis implements CommandExecutor {
         	item = item + ":" + unsafeDamage;
         }
 
-        player.sendMessage(Text.of(TextColors.DARK_GREEN, "Item: ", TextColors.YELLOW, item));
+        player.sendMessage(Text.of(TextColors.GREEN, item));
 
 		return CommandResult.success();
 	}

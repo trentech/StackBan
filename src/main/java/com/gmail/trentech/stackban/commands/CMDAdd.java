@@ -18,8 +18,8 @@ import com.gmail.trentech.stackban.utils.Help;
 public class CMDAdd implements CommandExecutor {
 
 	public CMDAdd(){
-		Help help = new Help("add", "add", " Add item to ban list in the format of MODID:ITEMTYPE[:VARIENTID]");
-		help.setSyntax(" /sban add <item>\n /b a <item>");
+		Help help = new Help("add", "add", " Add item to ban list in the format of");
+		help.setSyntax(" /sban add <modid:itemtype[:id]>\n /b a <modid:itemtype[:id]>");
 		help.setExample(" /sban add minecraft:stone\n /sban add minecraft:wool:5");
 		help.save();
 	}
@@ -27,7 +27,7 @@ public class CMDAdd implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if(!args.hasAny("item")) {
-			src.sendMessage(Text.of(TextColors.YELLOW, "/sban add <item>"));
+			src.sendMessage(Text.of(TextColors.YELLOW, "/sban add <modid:itemtype[:id]>"));
 			return CommandResult.empty();
 		}	
 		String itemType = args.<String>getOne("item").get();
@@ -35,7 +35,7 @@ public class CMDAdd implements CommandExecutor {
 		String[] check = itemType.split(":");
 		
 		if(check.length < 2){
-			src.sendMessage(Text.of(TextColors.YELLOW, "/sban add <item>"));
+			src.sendMessage(Text.of(TextColors.YELLOW, "/sban add <modid:itemtype[:id]>"));
 			return CommandResult.empty();
 		}
 
@@ -59,7 +59,7 @@ public class CMDAdd implements CommandExecutor {
 		
 		configManager.save();
 		
-		src.sendMessage(Text.of(TextColors.GREEN, "Added ", itemType, " to ban list"));
+		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Added ", TextColors.YELLOW, itemType, TextColors.DARK_GREEN, " to ban list"));
 		
 		return CommandResult.success();
 	}

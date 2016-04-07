@@ -20,7 +20,7 @@ public class CMDList implements CommandExecutor {
 
 	public CMDList(){
 		Help help = new Help("list", "list", " List all banned items");
-		help.setSyntax(" /sban list\n /sb l");
+		help.setSyntax(" /sban list\n /sb ls");
 		help.setExample(" /sban list");
 		help.save();
 	}

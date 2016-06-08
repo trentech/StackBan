@@ -134,15 +134,13 @@ public class EventListener {
 		}
 	}
 
-	// NOT FIRING EVENTS
 	@Listener
-	public void onUseItemStackEvent(UseItemStackEvent event, @First Player player){
-		System.out.println("UseItemStackEvent");
+	public void onUseItemStackEvent(UseItemStackEvent.Start event, @First Player player){
 		if(player.hasPermission("stackban.admin")){
 			return;
 		}
 		
-		ItemStackSnapshot snapshot = event.getItemStackInUse().getOriginal();
+		ItemStackSnapshot snapshot = event.getItemStackInUse();
 		ItemStack itemStack = snapshot.createStack();
 		
 		if(isBanned(itemStack)){

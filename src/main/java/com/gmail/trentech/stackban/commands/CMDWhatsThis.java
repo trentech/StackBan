@@ -9,6 +9,7 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataQuery;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
@@ -33,7 +34,7 @@ public class CMDWhatsThis implements CommandExecutor {
 		}
 		Player player = (Player) src;
 		
-		Optional<ItemStack> optionalItemStack = player.getItemInHand();
+		Optional<ItemStack> optionalItemStack = player.getItemInHand(HandTypes.MAIN_HAND);
 		
 		if(!optionalItemStack.isPresent()){
 			src.sendMessage(Text.of(TextColors.YELLOW, "You must be holding an item"));

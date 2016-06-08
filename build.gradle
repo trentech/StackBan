@@ -27,7 +27,7 @@ configurations {
 }
 
 dependencies {
-    compile "org.spongepowered:spongeapi:4.1.0-SNAPSHOT"
+    compile "org.spongepowered:spongeapi:5.0.0-SNAPSHOT"
 	shade "com.github.Flibio:Updatifier:-SNAPSHOT:api"
 }
 
@@ -36,5 +36,5 @@ jar {
     configurations.shade.copyRecursive().setTransitive(false).each { artifact ->
       from (zipTree(artifact))
     }
-    baseName = 'stackban-4.1.0'
+    baseName = 'stackban-5.0.0'
 }

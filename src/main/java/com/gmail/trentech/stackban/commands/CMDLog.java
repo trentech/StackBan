@@ -14,22 +14,22 @@ import com.gmail.trentech.stackban.utils.Help;
 
 public class CMDLog implements CommandExecutor {
 
-	public CMDLog(){
+	public CMDLog() {
 		Help help = new Help("add", "add", " Log to console when player triggers banned item event");
 		help.setSyntax(" /sban log <boolean>\n /b a <boolean>");
 		help.setExample(" /sban log true\n /sban add false");
 		help.save();
 	}
-	
+
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if(!args.hasAny("boolean")) {
+		if (!args.hasAny("boolean")) {
 			src.sendMessage(Text.of(TextColors.YELLOW, "/sban log <boolean>"));
 			return CommandResult.empty();
-		}	
-		String value = args.<String>getOne("boolean").get();
-		
-		if(!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")){
+		}
+		String value = args.<String> getOne("boolean").get();
+
+		if (!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")) {
 			src.sendMessage(Text.of(TextColors.YELLOW, "/sban log <boolean>"));
 			return CommandResult.empty();
 		}
@@ -37,13 +37,13 @@ public class CMDLog implements CommandExecutor {
 		Main.setLog(Boolean.getBoolean(value));
 
 		ConfigManager configManager = new ConfigManager();
-		
+
 		configManager.getConfig().getNode("console_log").setValue(Boolean.getBoolean(value));
-		
+
 		configManager.save();
-		
+
 		src.sendMessage(Text.of(TextColors.GREEN, "Set ban logging to ", value));
-		
+
 		return CommandResult.success();
 	}
 

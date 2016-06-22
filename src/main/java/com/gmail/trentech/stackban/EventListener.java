@@ -26,50 +26,50 @@ public class EventListener {
 
 	@Listener
 	public void onChangeBlockEvent(ChangeBlockEvent.Place event, @First Player player) {
-		if(player.hasPermission("stackban.admin")){
+		if (player.hasPermission("stackban.admin")) {
 			return;
 		}
-		
+
 		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
 			BlockSnapshot snapshot = transaction.getFinal();
-			
-			if(snapshot.getState().getType().equals(BlockTypes.AIR)){
+
+			if (snapshot.getState().getType().equals(BlockTypes.AIR)) {
 				continue;
 			}
-			
+
 			ItemStack itemStack = ItemStack.builder().fromBlockSnapshot(snapshot).build();
-			
-			if(isBanned(itemStack)){
-				if(Main.isLog()){
-					Main.getLog().info(player.getName() + " attempted to place banned item: " + itemStack.getItem().getName());	
+
+			if (isBanned(itemStack)) {
+				if (Main.isLog()) {
+					Main.getLog().info(player.getName() + " attempted to place banned item: " + itemStack.getItem().getName());
 				}
-				
+
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
 				snapshot.getLocation().get().setBlock(BlockTypes.AIR.getDefaultState());
 			}
 		}
 	}
-	
+
 	@Listener
 	public void onChangeBlockEvent(ChangeBlockEvent.Break event, @First Player player) {
-		if(player.hasPermission("stackban.admin")){
+		if (player.hasPermission("stackban.admin")) {
 			return;
 		}
-		
+
 		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
 			BlockSnapshot snapshot = transaction.getFinal();
-			
-			if(snapshot.getState().getType().equals(BlockTypes.AIR)){
+
+			if (snapshot.getState().getType().equals(BlockTypes.AIR)) {
 				continue;
 			}
-			
+
 			ItemStack itemStack = ItemStack.builder().fromBlockSnapshot(snapshot).build();
-			
-			if(isBanned(itemStack)){
-				if(Main.isLog()){
+
+			if (isBanned(itemStack)) {
+				if (Main.isLog()) {
 					Main.getLog().info(player.getName() + " attempted to break banned item: " + itemStack.getItem().getName());
 				}
-				
+
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
 				event.setCancelled(true);
 			}
@@ -77,20 +77,20 @@ public class EventListener {
 	}
 
 	@Listener
-	@Exclude({ClickInventoryEvent.Drop.class})
-	public void onClickInventoryEvent(ClickInventoryEvent event, @First Player player){
-		if(player.hasPermission("stackban.admin")){
+	@Exclude({ ClickInventoryEvent.Drop.class })
+	public void onClickInventoryEvent(ClickInventoryEvent event, @First Player player) {
+		if (player.hasPermission("stackban.admin")) {
 			return;
 		}
-		
+
 		ItemStack itemStack = event.getCursorTransaction().getOriginal().createStack();
-		
-		if(isBanned(itemStack)){
-			if(!event.getTransactions().isEmpty()){
-				if(Main.isLog()){
+
+		if (isBanned(itemStack)) {
+			if (!event.getTransactions().isEmpty()) {
+				if (Main.isLog()) {
 					Main.getLog().info(player.getName() + " attempted to interact with banned item: " + itemStack.getItem().getName());
 				}
-				
+
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
 				event.getTransactions().get(0).getSlot().clear();
 			}
@@ -98,72 +98,72 @@ public class EventListener {
 	}
 
 	@Listener
-	public void onDropItemEvent(DropItemEvent.Dispense event, @First Player player){
-		for(Entity entity : event.getEntities()){
+	public void onDropItemEvent(DropItemEvent.Dispense event, @First Player player) {
+		for (Entity entity : event.getEntities()) {
 			ItemStack itemStack = ((Item) entity).getItemData().item().get().createStack();
-			
-			if(isBanned(itemStack)){
-				if(Main.isLog()){
+
+			if (isBanned(itemStack)) {
+				if (Main.isLog()) {
 					Main.getLog().info(player.getName() + " attempted to drop banned item: " + itemStack.getItem().getName());
 				}
-				
+
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
 				entity.remove();
-	        }
-		}
-	}
-	
-	@Listener
-	public void onChangeInventoryEvent(ChangeInventoryEvent.Held event, @First Player player){
-		if(player.hasPermission("stackban.admin")){
-			return;
-		}
-		
-		for (SlotTransaction transaction : event.getTransactions()) {
-			ItemStackSnapshot snapshot = transaction.getOriginal();
-			ItemStack itemStack = snapshot.createStack();
-			
-			if(isBanned(itemStack)){
-				if(Main.isLog()){
-					Main.getLog().info(player.getName() + " was holding a banned item: " + itemStack.getItem().getName());
-				}
-				
-				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
-				transaction.getSlot().clear();
-			}			
+			}
 		}
 	}
 
 	@Listener
-	public void onUseItemStackEvent(UseItemStackEvent.Start event, @First Player player){
-		if(player.hasPermission("stackban.admin")){
+	public void onChangeInventoryEvent(ChangeInventoryEvent.Held event, @First Player player) {
+		if (player.hasPermission("stackban.admin")) {
 			return;
 		}
-		
+
+		for (SlotTransaction transaction : event.getTransactions()) {
+			ItemStackSnapshot snapshot = transaction.getOriginal();
+			ItemStack itemStack = snapshot.createStack();
+
+			if (isBanned(itemStack)) {
+				if (Main.isLog()) {
+					Main.getLog().info(player.getName() + " was holding a banned item: " + itemStack.getItem().getName());
+				}
+
+				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
+				transaction.getSlot().clear();
+			}
+		}
+	}
+
+	@Listener
+	public void onUseItemStackEvent(UseItemStackEvent.Start event, @First Player player) {
+		if (player.hasPermission("stackban.admin")) {
+			return;
+		}
+
 		ItemStackSnapshot snapshot = event.getItemStackInUse();
 		ItemStack itemStack = snapshot.createStack();
-		
-		if(isBanned(itemStack)){
-			if(Main.isLog()){
+
+		if (isBanned(itemStack)) {
+			if (Main.isLog()) {
 				Main.getLog().info(player.getName() + " attempted to use banned item: " + itemStack.getItem().getName());
 			}
-			
+
 			player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
 			event.setCancelled(true);
 		}
 	}
-	
-	private boolean isBanned(ItemStack itemStack){
-        String itemType = itemStack.getItem().getName();
 
-		if(Main.getItems().contains(itemType)){
+	private boolean isBanned(ItemStack itemStack) {
+		String itemType = itemStack.getItem().getName();
+
+		if (Main.getItems().contains(itemType)) {
 			return true;
 		}
-		
+
 		DataContainer cont = itemStack.toContainer();
-        DataQuery query = DataQuery.of('/',"UnsafeDamage");
-        
-		if(Main.getItems().contains(itemType + ":" + cont.get(query).get().toString())){
+		DataQuery query = DataQuery.of('/', "UnsafeDamage");
+
+		if (Main.getItems().contains(itemType + ":" + cont.get(query).get().toString())) {
 			return true;
 		}
 

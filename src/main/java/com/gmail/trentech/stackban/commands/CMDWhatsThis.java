@@ -19,41 +19,41 @@ import com.gmail.trentech.stackban.utils.Help;
 
 public class CMDWhatsThis implements CommandExecutor {
 
-	public CMDWhatsThis(){
+	public CMDWhatsThis() {
 		Help help = new Help("whatsthis", "whatsthis", " If you are not sure the itemtype or varient of an item, use this command to find out the item that is in players hand");
 		help.setSyntax(" /whatsthis\n /wt");
 		help.setExample(" /whatsthis");
 		help.save();
 	}
-	
+
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if(!(src instanceof Player)){
+		if (!(src instanceof Player)) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Must be a player"));
 			return CommandResult.empty();
 		}
 		Player player = (Player) src;
-		
+
 		Optional<ItemStack> optionalItemStack = player.getItemInHand(HandTypes.MAIN_HAND);
-		
-		if(!optionalItemStack.isPresent()){
+
+		if (!optionalItemStack.isPresent()) {
 			src.sendMessage(Text.of(TextColors.YELLOW, "You must be holding an item"));
 			return CommandResult.empty();
 		}
 		ItemStack itemStack = optionalItemStack.get();
-		
+
 		DataContainer cont = itemStack.toContainer();
-        DataQuery query = DataQuery.of('/',"UnsafeDamage");
+		DataQuery query = DataQuery.of('/', "UnsafeDamage");
 
-        int unsafeDamage = Integer.parseInt(cont.get(query).get().toString());
-        
-        String item = itemStack.getItem().getName();
-        		
-        if(unsafeDamage != 0){
-        	item = item + ":" + unsafeDamage;
-        }
+		int unsafeDamage = Integer.parseInt(cont.get(query).get().toString());
 
-        player.sendMessage(Text.of(TextColors.GREEN, item));
+		String item = itemStack.getItem().getName();
+
+		if (unsafeDamage != 0) {
+			item = item + ":" + unsafeDamage;
+		}
+
+		player.sendMessage(Text.of(TextColors.GREEN, item));
 
 		return CommandResult.success();
 	}

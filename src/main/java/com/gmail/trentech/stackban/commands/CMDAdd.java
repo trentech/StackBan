@@ -17,50 +17,50 @@ import com.gmail.trentech.stackban.utils.Help;
 
 public class CMDAdd implements CommandExecutor {
 
-	public CMDAdd(){
+	public CMDAdd() {
 		Help help = new Help("add", "add", " Add item to ban list in the format of");
 		help.setSyntax(" /sban add <modid:itemtype[:id]>\n /b a <modid:itemtype[:id]>");
 		help.setExample(" /sban add minecraft:stone\n /sban add minecraft:wool:5");
 		help.save();
 	}
-	
+
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if(!args.hasAny("item")) {
+		if (!args.hasAny("item")) {
 			src.sendMessage(Text.of(TextColors.YELLOW, "/sban add <modid:itemtype[:id]>"));
 			return CommandResult.empty();
-		}	
-		String itemType = args.<String>getOne("item").get();
-		
+		}
+		String itemType = args.<String> getOne("item").get();
+
 		String[] check = itemType.split(":");
-		
-		if(check.length < 2){
+
+		if (check.length < 2) {
 			src.sendMessage(Text.of(TextColors.YELLOW, "/sban add <modid:itemtype[:id]>"));
 			return CommandResult.empty();
 		}
 
-		if(!Main.getGame().getRegistry().getType(ItemType.class, check[0] + ":" + check[1]).isPresent()){
+		if (!Main.getGame().getRegistry().getType(ItemType.class, check[0] + ":" + check[1]).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Not a valid ItemType"));
 			return CommandResult.empty();
 		}
 
-		if(Main.getItems().contains(itemType)){
+		if (Main.getItems().contains(itemType)) {
 			src.sendMessage(Text.of(TextColors.YELLOW, itemType, " already exists"));
 			return CommandResult.empty();
 		}
-		
+
 		List<String> items = Main.getItems();
-		
+
 		items.add(itemType);
 
 		ConfigManager configManager = new ConfigManager();
-		
+
 		configManager.getConfig().getNode("items").setValue(items);
-		
+
 		configManager.save();
-		
+
 		src.sendMessage(Text.of(TextColors.DARK_GREEN, "Added ", TextColors.YELLOW, itemType, TextColors.DARK_GREEN, " to ban list"));
-		
+
 		return CommandResult.success();
 	}
 

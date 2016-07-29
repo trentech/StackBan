@@ -10,6 +10,8 @@ import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.filter.type.Exclude;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
@@ -45,7 +47,7 @@ public class EventListener {
 				}
 
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
-				snapshot.getLocation().get().setBlock(BlockTypes.AIR.getDefaultState());
+				snapshot.getLocation().get().setBlock(BlockTypes.AIR.getDefaultState(), Cause.of(NamedCause.source(Main.getPlugin())));
 			}
 		}
 	}

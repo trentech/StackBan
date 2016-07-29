@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
-import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
@@ -20,11 +19,10 @@ import com.gmail.trentech.stackban.utils.Resource;
 
 import me.flibio.updatifier.Updatifier;
 
-@Updatifier(repoName = "StackBan", repoOwner = "TrenTech", version = Resource.VERSION)
-@Plugin(id = Resource.ID, name = Resource.NAME, authors = Resource.AUTHOR, url = Resource.URL, dependencies = { @Dependency(id = "Updatifier", optional = true) })
+@Updatifier(repoName = Resource.NAME, repoOwner = Resource.AUTHOR, version = Resource.VERSION)
+@Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION, description = Resource.DESCRIPTION, authors = Resource.AUTHOR, url = Resource.URL, dependencies = { @Dependency(id = "Updatifier", optional = true) })
 public class Main {
 
-	private static Game game;
 	private static Logger log;
 	private static PluginContainer plugin;
 
@@ -33,16 +31,15 @@ public class Main {
 
 	@Listener
 	public void onPreInitialization(GamePreInitializationEvent event) {
-		game = Sponge.getGame();
-		plugin = getGame().getPluginManager().getPlugin(Resource.ID).get();
+		plugin = Sponge.getPluginManager().getPlugin(Resource.ID).get();
 		log = getPlugin().getLogger();
 	}
 
 	@Listener
 	public void onInitialization(GameInitializationEvent event) {
-		getGame().getEventManager().registerListeners(this, new EventListener());
-		getGame().getCommandManager().register(this, new CommandManager().cmdSBan, "sban", "sb");
-		getGame().getCommandManager().register(this, new CommandManager().cmdWhatsThis, "whatsthis", "wt");
+		Sponge.getEventManager().registerListeners(this, new EventListener());
+		Sponge.getCommandManager().register(this, new CommandManager().cmdSBan, "sban", "sb");
+		Sponge.getCommandManager().register(this, new CommandManager().cmdWhatsThis, "whatsthis", "wt");
 	}
 
 	@Listener
@@ -52,10 +49,6 @@ public class Main {
 
 	public static Logger getLog() {
 		return log;
-	}
-
-	public static Game getGame() {
-		return game;
 	}
 
 	public static PluginContainer getPlugin() {

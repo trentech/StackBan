@@ -1,15 +1,12 @@
 plugins {
   id 'maven'
-  id 'org.spongepowered.plugin' version '0.6'
   id 'net.ellune.blossom' version '1.0.1'
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version = "${project.version}"
-group = "${project.group}"
-description = "${project.description}"
+archivesBaseName = "${project.id}-${project.apiVersion.split("-")[0]}"
 
 repositories {
     mavenCentral()
@@ -24,8 +21,13 @@ repositories {
 }
 
 blossom {
-    String path = 'src/main/java/com/gmail/trentech/stackban/utils/Resource.java'
+    String path = "src/main/java/com/gmail/trentech/${project.id}/utils/Resource.java"
     replaceToken '@project.version@', project.version, path
+	replaceToken '@project.id@', project.id, path
+    replaceToken '@project.name@', project.name, path
+    replaceToken '@project.description@', project.description, path
+	replaceToken '@project.author@', project.author, path
+	replaceToken '@project.url@', project.url, path
 }
 
 configurations {
@@ -42,5 +44,4 @@ jar {
     configurations.shade.copyRecursive().setTransitive(false).each { artifact ->
       from (zipTree(artifact))
     }
-    baseName = "stackban-${project.apiVersion.split("-")[0]}"
 }

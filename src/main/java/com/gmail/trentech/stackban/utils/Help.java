@@ -5,13 +5,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.service.pagination.PaginationList.Builder;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
-
-import com.gmail.trentech.stackban.Main;
 
 public class Help {
 
@@ -65,7 +64,7 @@ public class Help {
 		return (CommandSource src) -> {
 			for (Help help : list) {
 				if (help.getId().equalsIgnoreCase(input)) {
-					Builder pages = Main.getGame().getServiceManager().provide(PaginationService.class).get().builder();
+					Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
 					pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, help.getCommand().toLowerCase())).build());
 
 					List<Text> list = new ArrayList<>();

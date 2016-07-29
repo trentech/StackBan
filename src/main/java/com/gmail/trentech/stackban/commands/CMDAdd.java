@@ -2,6 +2,7 @@ package com.gmail.trentech.stackban.commands;
 
 import java.util.List;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -39,7 +40,7 @@ public class CMDAdd implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
-		if (!Main.getGame().getRegistry().getType(ItemType.class, check[0] + ":" + check[1]).isPresent()) {
+		if (!Sponge.getRegistry().getType(ItemType.class, check[0] + ":" + check[1]).isPresent()) {
 			src.sendMessage(Text.of(TextColors.DARK_RED, "Not a valid ItemType"));
 			return CommandResult.empty();
 		}

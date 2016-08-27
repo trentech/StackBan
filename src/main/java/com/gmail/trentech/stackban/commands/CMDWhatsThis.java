@@ -42,18 +42,18 @@ public class CMDWhatsThis implements CommandExecutor {
 		}
 		ItemStack itemStack = optionalItemStack.get();
 
-		DataContainer cont = itemStack.toContainer();
+		DataContainer container = itemStack.toContainer();
 		DataQuery query = DataQuery.of('/', "UnsafeDamage");
 
-		int unsafeDamage = Integer.parseInt(cont.get(query).get().toString());
+		int unsafeDamage = Integer.parseInt(container.get(query).get().toString());
 
-		String item = itemStack.getItem().getName();
+		String item = itemStack.getItem().getId();
 
 		if (unsafeDamage != 0) {
 			item = item + ":" + unsafeDamage;
 		}
 
-		player.sendMessage(Text.of(TextColors.GREEN, item));
+		player.sendMessage(Text.of(TextColors.YELLOW, item));
 
 		return CommandResult.success();
 	}

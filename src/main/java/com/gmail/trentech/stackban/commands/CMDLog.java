@@ -27,18 +27,16 @@ public class CMDLog implements CommandExecutor {
 			src.sendMessage(Text.of(TextColors.YELLOW, "/sban log <boolean>"));
 			return CommandResult.empty();
 		}
-		String value = args.<String> getOne("boolean").get();
+		String value = args.<String>getOne("boolean").get();
 
 		if (!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")) {
 			src.sendMessage(Text.of(TextColors.YELLOW, "/sban log <boolean>"));
 			return CommandResult.empty();
 		}
 
-		Main.setLog(Boolean.getBoolean(value));
+		ConfigManager configManager = Main.getConfigManager();
 
-		ConfigManager configManager = new ConfigManager();
-
-		configManager.getConfig().getNode("console_log").setValue(Boolean.getBoolean(value));
+		configManager.getConfig().getNode("console_log").setValue(Boolean.valueOf(value));
 
 		configManager.save();
 

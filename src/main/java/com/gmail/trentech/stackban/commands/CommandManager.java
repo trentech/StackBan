@@ -6,40 +6,41 @@ import org.spongepowered.api.text.Text;
 
 public class CommandManager {
 
-	private CommandSpec cmdAdd = CommandSpec.builder()
-		    .permission("stackban.cmd.sban.add")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("item"))))
-		    .executor(new CMDAdd())
-		    .build();
-	
+	private CommandSpec cmdSet = CommandSpec.builder()
+			.permission("stackban.cmd.sban.set")
+			.arguments(GenericArguments.optional(GenericArguments.string(Text.of("item"))), 
+					GenericArguments.flags().flag("break", "craft", "drop", "hold", "modify", "pickup", "place", "use").setAcceptsArbitraryLongFlags(true).buildWith(GenericArguments.none()))
+			.executor(new CMDSet())
+			.build();
+
 	private CommandSpec cmdRemove = CommandSpec.builder()
-		    .permission("stackban.cmd.sban.remove")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("index"))))
-		    .executor(new CMDRemove())
-		    .build();
-	
+			.permission("stackban.cmd.sban.remove")
+			.arguments(GenericArguments.optional(GenericArguments.string(Text.of("item"))))
+			.executor(new CMDRemove())
+			.build();
+
 	private CommandSpec cmdList = CommandSpec.builder()
-		    .permission("stackban.cmd.sban.list")
-		    .executor(new CMDList())
-		    .build();
-	
+			.permission("stackban.cmd.sban.list")
+			.executor(new CMDList())
+			.build();
+
 	private CommandSpec cmdLog = CommandSpec.builder()
-		    .permission("stackban.cmd.sban.log")
-		    .arguments(GenericArguments.optional(GenericArguments.string(Text.of("boolean"))))
-		    .executor(new CMDLog())
-		    .build();
-	
+			.permission("stackban.cmd.sban.log")
+			.arguments(GenericArguments.optional(GenericArguments.string(Text.of("boolean"))))
+			.executor(new CMDLog())
+			.build();
+
 	public CommandSpec cmdSBan = CommandSpec.builder()
-		    .permission("stackban.cmd.sban")
-		    .child(cmdAdd, "add", "a")
-		    .child(cmdRemove, "remove", "r")
-		    .child(cmdList, "list", "ls")
-		    .child(cmdLog, "log", "l")
-		    .executor(new CMDSBan())
-		    .build();
-	
+			.permission("stackban.cmd.sban")
+			.child(cmdSet, "set", "s")
+			.child(cmdRemove, "remove", "r")
+			.child(cmdList, "list", "ls")
+			.child(cmdLog, "log", "l")
+			.executor(new CMDSBan())
+			.build();
+
 	public CommandSpec cmdWhatsThis = CommandSpec.builder()
-		    .permission("stackban.cmd.whatsthis")
-		    .executor(new CMDWhatsThis())
-		    .build();
+			.permission("stackban.cmd.whatsthis")
+			.executor(new CMDWhatsThis())
+			.build();
 }

@@ -1,14 +1,11 @@
 package com.gmail.trentech.stackban;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.GameReloadEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
-import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
@@ -25,9 +22,7 @@ public class Main {
 
 	private static Logger log;
 	private static PluginContainer plugin;
-
-	private static List<String> items = new ArrayList<>();
-	private static boolean isLog = false;
+	private static ConfigManager configManager;
 
 	@Listener
 	public void onPreInitialization(GamePreInitializationEvent event) {
@@ -37,14 +32,16 @@ public class Main {
 
 	@Listener
 	public void onInitialization(GameInitializationEvent event) {
+		configManager = new ConfigManager().init();
+
 		Sponge.getEventManager().registerListeners(this, new EventListener());
 		Sponge.getCommandManager().register(this, new CommandManager().cmdSBan, "sban", "sb");
 		Sponge.getCommandManager().register(this, new CommandManager().cmdWhatsThis, "whatsthis", "wt");
 	}
 
 	@Listener
-	public void onStartedServer(GameStartedServerEvent event) {
-		new ConfigManager().init();
+	public void onReloadEvent(GameReloadEvent event) {
+		configManager = new ConfigManager().init();
 	}
 
 	public static Logger getLog() {
@@ -55,19 +52,7 @@ public class Main {
 		return plugin;
 	}
 
-	public static List<String> getItems() {
-		return items;
-	}
-
-	public static void setItems(List<String> items) {
-		Main.items = items;
-	}
-
-	public static boolean isLog() {
-		return isLog;
-	}
-
-	public static void setLog(boolean isLog) {
-		Main.isLog = isLog;
+	public static ConfigManager getConfigManager() {
+		return configManager;
 	}
 }

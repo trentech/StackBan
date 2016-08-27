@@ -9,7 +9,8 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.service.pagination.PaginationList.Builder;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
@@ -21,14 +22,10 @@ public class CMDSBan implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
-
-		pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Command List")).build());
-
 		List<Text> list = new ArrayList<>();
 
-		if (src.hasPermission("stackban.cmd.sban.add")) {
-			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp("add"))).append(Text.of(" /sban add")).build());
+		if (src.hasPermission("stackban.cmd.sban.set")) {
+			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp("set"))).append(Text.of(" /sban set")).build());
 		}
 		if (src.hasPermission("stackban.cmd.sban.remove")) {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp("remove"))).append(Text.of(" /sban remove")).build());
@@ -42,9 +39,20 @@ public class CMDSBan implements CommandExecutor {
 		if (src.hasPermission("stackban.cmd.whatsthis")) {
 			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp("whatsthis"))).append(Text.of(" /whatsthis")).build());
 		}
-		pages.contents(list);
 
-		pages.sendTo(src);
+		if (src instanceof Player) {
+			PaginationList.Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
+
+			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Command List")).build());
+
+			pages.contents(list);
+
+			pages.sendTo(src);
+		} else {
+			for (Text text : list) {
+				src.sendMessage(text);
+			}
+		}
 
 		return CommandResult.success();
 	}

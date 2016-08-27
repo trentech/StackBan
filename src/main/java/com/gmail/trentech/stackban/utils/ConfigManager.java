@@ -2,13 +2,11 @@ package com.gmail.trentech.stackban.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+
+import org.spongepowered.api.item.ItemTypes;
 
 import com.gmail.trentech.stackban.Main;
 
-import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -18,28 +16,6 @@ public class ConfigManager {
 	private File file;
 	private CommentedConfigurationNode config;
 	private ConfigurationLoader<CommentedConfigurationNode> loader;
-
-	public ConfigManager(String folder, String configName) {
-		folder = "config" + File.separator + Resource.ID + File.separator + folder;
-		if (!new File(folder).isDirectory()) {
-			new File(folder).mkdirs();
-		}
-		file = new File(folder, configName);
-
-		create();
-		load();
-	}
-
-	public ConfigManager(String configName) {
-		String folder = "config" + File.separator + Resource.ID;
-		if (!new File(folder).isDirectory()) {
-			new File(folder).mkdirs();
-		}
-		file = new File(folder, configName);
-
-		create();
-		load();
-	}
 
 	public ConfigManager() {
 		String folder = "config" + File.separator + Resource.ID;
@@ -72,29 +48,29 @@ public class ConfigManager {
 		}
 	}
 
-	public void init() {
+	public ConfigManager init() {
 		CommentedConfigurationNode node = config.getNode("items");
 
 		if (node.isVirtual()) {
-			List<String> list = new ArrayList<>();
-			list.add("minecraft:stone");
-
-			node.setValue(list);
-			save();
-
-			Main.setItems(list);
-		} else {
-			Main.setItems(node.getChildrenList().stream().map(ConfigurationNode::getString).collect(Collectors.toList()));
+			node.getNode(ItemTypes.STONE.getId(), "place").setValue(false);
+			node.getNode(ItemTypes.STONE.getId(), "break").setValue(false);
+			node.getNode(ItemTypes.STONE.getId(), "use").setValue(false);
+			node.getNode(ItemTypes.STONE.getId(), "craft").setValue(false);
+			node.getNode(ItemTypes.STONE.getId(), "modify").setValue(false);
+			node.getNode(ItemTypes.STONE.getId(), "hold").setValue(false);
+			node.getNode(ItemTypes.STONE.getId(), "pickup").setValue(false);
+			node.getNode(ItemTypes.STONE.getId(), "drop").setValue(false);
 		}
 
 		node = config.getNode("console_log");
 
 		if (node.isVirtual()) {
 			node.setValue(false).setComment("Log to console when player triggers banned item event");
-			save();
-		} else {
-			Main.setLog(node.getBoolean());
 		}
+
+		save();
+
+		return this;
 	}
 
 	private void load() {

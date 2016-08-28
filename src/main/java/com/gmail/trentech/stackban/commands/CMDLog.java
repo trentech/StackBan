@@ -8,7 +8,6 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import com.gmail.trentech.stackban.Main;
 import com.gmail.trentech.stackban.utils.ConfigManager;
 import com.gmail.trentech.stackban.utils.Help;
 
@@ -34,10 +33,9 @@ public class CMDLog implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
-		ConfigManager configManager = Main.getConfigManager();
+		ConfigManager configManager = ConfigManager.get();
 
 		configManager.getConfig().getNode("console_log").setValue(Boolean.valueOf(value));
-
 		configManager.save();
 
 		src.sendMessage(Text.of(TextColors.GREEN, "Set ban logging to ", value));

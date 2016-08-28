@@ -8,19 +8,20 @@ public class CommandManager {
 
 	private CommandSpec cmdSet = CommandSpec.builder()
 			.permission("stackban.cmd.sban.set")
-			.arguments(GenericArguments.optional(GenericArguments.string(Text.of("item"))), 
+			.arguments(GenericArguments.optional(GenericArguments.string(Text.of("world"))), GenericArguments.optional(GenericArguments.string(Text.of("item"))),
 					GenericArguments.flags().flag("break", "craft", "drop", "hold", "modify", "pickup", "place", "use").setAcceptsArbitraryLongFlags(true).buildWith(GenericArguments.none()))
 			.executor(new CMDSet())
 			.build();
 
 	private CommandSpec cmdRemove = CommandSpec.builder()
 			.permission("stackban.cmd.sban.remove")
-			.arguments(GenericArguments.optional(GenericArguments.string(Text.of("item"))))
+			.arguments(GenericArguments.optional(GenericArguments.string(Text.of("world"))), GenericArguments.optional(GenericArguments.string(Text.of("item"))))
 			.executor(new CMDRemove())
 			.build();
 
 	private CommandSpec cmdList = CommandSpec.builder()
 			.permission("stackban.cmd.sban.list")
+			.arguments(GenericArguments.optional(GenericArguments.string(Text.of("world"))))
 			.executor(new CMDList())
 			.build();
 

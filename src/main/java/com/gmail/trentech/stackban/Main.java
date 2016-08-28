@@ -9,6 +9,7 @@ import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
+import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.stackban.commands.CommandManager;
 import com.gmail.trentech.stackban.utils.ConfigManager;
@@ -22,7 +23,6 @@ public class Main {
 
 	private static Logger log;
 	private static PluginContainer plugin;
-	private static ConfigManager configManager;
 
 	@Listener
 	public void onPreInitialization(GamePreInitializationEvent event) {
@@ -32,7 +32,7 @@ public class Main {
 
 	@Listener
 	public void onInitialization(GameInitializationEvent event) {
-		configManager = new ConfigManager().init();
+		ConfigManager.init();
 
 		Sponge.getEventManager().registerListeners(this, new EventListener());
 		Sponge.getCommandManager().register(this, new CommandManager().cmdSBan, "sban", "sb");
@@ -41,7 +41,11 @@ public class Main {
 
 	@Listener
 	public void onReloadEvent(GameReloadEvent event) {
-		configManager = new ConfigManager().init();
+		ConfigManager.init();
+
+		for (World world : Sponge.getServer().getWorlds()) {
+			ConfigManager.init(world.getName());
+		}
 	}
 
 	public static Logger getLog() {
@@ -50,9 +54,5 @@ public class Main {
 
 	public static PluginContainer getPlugin() {
 		return plugin;
-	}
-
-	public static ConfigManager getConfigManager() {
-		return configManager;
 	}
 }

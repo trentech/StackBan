@@ -10,7 +10,6 @@ import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import com.gmail.trentech.stackban.Main;
 import com.gmail.trentech.stackban.utils.ConfigManager;
 import com.gmail.trentech.stackban.utils.Help;
 
@@ -20,15 +19,26 @@ public class CMDSet implements CommandExecutor {
 
 	public CMDSet() {
 		Help help = new Help("set", "set", " Set item in ban list. All actions are banned by default. To unban action add corresponding flag");
-		help.setSyntax(" /sban set <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]\n /b s <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]");
-		help.setExample(" /sban set minecraft:stone\n /sban set minecraft:wool:5");
+		help.setSyntax(" /sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]\n /b s <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]");
+		help.setExample(" /sban set world minecraft:stone\n /sban set minecraft:wool:5");
 		help.save();
 	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		if (!args.hasAny("world")) {
+			src.sendMessage(Text.of(TextColors.YELLOW, "/sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]"));
+			return CommandResult.empty();
+		}
+		String worldName = args.<String>getOne("world").get();
+		
+		if(!Sponge.getServer().getWorld(worldName).isPresent()) {
+			src.sendMessage(Text.of(TextColors.RED, worldName, " does not exist"));
+			return CommandResult.empty();
+		}
+		
 		if (!args.hasAny("item")) {
-			src.sendMessage(Text.of(TextColors.YELLOW, "/sban set <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]"));
+			src.sendMessage(Text.of(TextColors.YELLOW, "/sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]"));
 			return CommandResult.empty();
 		}
 		String itemType = args.<String>getOne("item").get();
@@ -36,7 +46,7 @@ public class CMDSet implements CommandExecutor {
 		String[] check = itemType.split(":");
 
 		if (check.length < 2) {
-			src.sendMessage(Text.of(TextColors.YELLOW, "/sban set <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]"));
+			src.sendMessage(Text.of(TextColors.YELLOW, "/sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]"));
 			return CommandResult.empty();
 		}
 
@@ -45,7 +55,7 @@ public class CMDSet implements CommandExecutor {
 			return CommandResult.empty();
 		}
 
-		ConfigManager configManager = Main.getConfigManager();
+		ConfigManager configManager = ConfigManager.get(worldName);
 		ConfigurationNode config = configManager.getConfig();
 
 		config.getNode("items", itemType, "place").setValue(args.hasAny("place"));

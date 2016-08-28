@@ -16,7 +16,7 @@ import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import com.gmail.trentech.stackban.Main;
+import com.gmail.trentech.stackban.utils.ConfigManager;
 import com.gmail.trentech.stackban.utils.Help;
 
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
@@ -25,16 +25,27 @@ public class CMDList implements CommandExecutor {
 
 	public CMDList() {
 		Help help = new Help("list", "list", " List all banned items");
-		help.setSyntax(" /sban list\n /sb ls");
-		help.setExample(" /sban list");
+		help.setSyntax(" /sban list <world>\n /sb ls <world>");
+		help.setExample(" /sban list world");
 		help.save();
 	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		if (!args.hasAny("world")) {
+			src.sendMessage(Text.of(TextColors.YELLOW, "/sban list <world>"));
+			return CommandResult.empty();
+		}
+		String worldName = args.<String>getOne("world").get();
+		
+		if(!Sponge.getServer().getWorld(worldName).isPresent()) {
+			src.sendMessage(Text.of(TextColors.RED, worldName, " does not exist"));
+			return CommandResult.empty();
+		}
+		
 		List<Text> list = new ArrayList<>();
 
-		for (Entry<Object, ? extends CommentedConfigurationNode> item : Main.getConfigManager().getConfig().getNode("items").getChildrenMap().entrySet()) {
+		for (Entry<Object, ? extends CommentedConfigurationNode> item : ConfigManager.get(worldName).getConfig().getNode("items").getChildrenMap().entrySet()) {
 			list.add(Text.of(TextColors.GREEN, item.getValue().getKey().toString()));
 			list.add(Text.of(TextColors.YELLOW, "  - break: ", TextColors.WHITE, item.getValue().getNode("break").getBoolean()));
 			list.add(Text.of(TextColors.YELLOW, "  - craft: ", TextColors.WHITE, item.getValue().getNode("craft").getBoolean()));

@@ -73,7 +73,7 @@ public class ConfigManager {
 			if (node.isVirtual()) {
 				node.setValue(false).setComment("Log to console when player triggers banned item event");
 			}
-		} else {
+		} else if(configName.equalsIgnoreCase("global")) {
 			CommentedConfigurationNode node = config.getNode("items");
 
 			if (node.isVirtual()) {
@@ -87,7 +87,7 @@ public class ConfigManager {
 				node.getNode(ItemTypes.STONE.getId(), "drop").setValue(false);
 			}
 		}
-
+		
 		configManager.save();
 		
 		configManagers.put(configName, configManager);

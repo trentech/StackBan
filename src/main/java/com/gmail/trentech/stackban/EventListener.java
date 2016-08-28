@@ -57,6 +57,10 @@ public class EventListener {
 		if ((args[0].equalsIgnoreCase("sban") || args[0].equalsIgnoreCase("sb")) && args.length > 1) {
 			if ((args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("s"))) {
 				if(args.length == 2 || args.length == 3) {
+					if((args.length == 2 && rawMessage.substring(rawMessage.length() - 1).equalsIgnoreCase(" ")) || (args.length == 3 && "global".contains(args[2].toLowerCase()) && !"global".equalsIgnoreCase(args[2]))) {
+						list.add("global");
+					}
+					
 					for(World world : Sponge.getServer().getWorlds()) {
 						String name = world.getName();
 						
@@ -85,6 +89,10 @@ public class EventListener {
 
 			} else if ((args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("r"))) {
 				if(args.length == 2 || args.length == 3) {
+					if((args.length == 2 && rawMessage.substring(rawMessage.length() - 1).equalsIgnoreCase(" ")) || (args.length == 3 && "global".contains(args[2].toLowerCase()) && !"global".equalsIgnoreCase(args[2]))) {
+						list.add("global");
+					}
+					
 					for(World world : Sponge.getServer().getWorlds()) {
 						String name = world.getName();
 						
@@ -98,7 +106,7 @@ public class EventListener {
 					}
 				}
 				if(args.length == 3 || args.length == 4) {					
-					if(Sponge.getServer().getWorld(args[2]).isPresent()) {
+					if(Sponge.getServer().getWorld(args[2]).isPresent() || args[2].equalsIgnoreCase("global")) {
 						for (Entry<Object, ? extends CommentedConfigurationNode> item : ConfigManager.get(args[2]).getConfig().getNode("items").getChildrenMap().entrySet()) {
 							String id = item.getValue().getKey().toString();
 
@@ -308,10 +316,10 @@ public class EventListener {
 	private boolean isBanned(World world, ItemStack itemStack, Action action) {
 		String itemType = itemStack.getItem().getId();
 
-		ConfigurationNode config = ConfigManager.get(world.getName()).getConfig();
-
 		DataContainer container = itemStack.toContainer();
 		DataQuery query = DataQuery.of('/', "UnsafeDamage");
+		
+		ConfigurationNode config = ConfigManager.get(world.getName()).getConfig();
 
 		if (!config.getNode("items", itemType + ":" + container.get(query).get().toString()).isVirtual()) {
 			return !config.getNode("items", itemType + ":" + container.get(query).get().toString(), action.getName()).getBoolean();
@@ -321,6 +329,16 @@ public class EventListener {
 			return !config.getNode("items", itemType, action.getName()).getBoolean();
 		}
 
+		config = ConfigManager.get("global").getConfig();
+
+		if (!config.getNode("items", itemType + ":" + container.get(query).get().toString()).isVirtual()) {
+			return !config.getNode("items", itemType + ":" + container.get(query).get().toString(), action.getName()).getBoolean();
+		}
+
+		if (!config.getNode("items", itemType).isVirtual()) {
+			return !config.getNode("items", itemType, action.getName()).getBoolean();
+		}
+		
 		return false;
 	}
 

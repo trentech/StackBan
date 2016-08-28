@@ -33,7 +33,8 @@ public class Main {
 	@Listener
 	public void onInitialization(GameInitializationEvent event) {
 		ConfigManager.init();
-
+		ConfigManager.init("global");
+		
 		Sponge.getEventManager().registerListeners(this, new EventListener());
 		Sponge.getCommandManager().register(this, new CommandManager().cmdSBan, "sban", "sb");
 		Sponge.getCommandManager().register(this, new CommandManager().cmdWhatsThis, "whatsthis", "wt");
@@ -42,6 +43,7 @@ public class Main {
 	@Listener
 	public void onReloadEvent(GameReloadEvent event) {
 		ConfigManager.init();
+		ConfigManager.init("global");
 
 		for (World world : Sponge.getServer().getWorlds()) {
 			ConfigManager.init(world.getName());

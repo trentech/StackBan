@@ -17,7 +17,7 @@ import ninja.leaping.configurate.ConfigurationNode;
 public class CMDRemove implements CommandExecutor {
 
 	public CMDRemove() {
-		Help help = new Help("remove", "remove", " Remove item from ban list.");
+		Help help = new Help("remove", "remove", " Remove item from ban list. set <world> to 'global' to remove from global config");
 		help.setSyntax(" /sban remove <modid:itemType[:id]>\n /b r <modid:itemType[:id]>");
 		help.setExample(" /sban remove minecraft:stone");
 		help.save();
@@ -31,7 +31,7 @@ public class CMDRemove implements CommandExecutor {
 		}
 		String worldName = args.<String>getOne("world").get();
 		
-		if(!Sponge.getServer().getWorld(worldName).isPresent()) {
+		if(!Sponge.getServer().getWorld(worldName).isPresent() && !worldName.equalsIgnoreCase("global")) {
 			src.sendMessage(Text.of(TextColors.RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}

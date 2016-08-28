@@ -38,7 +38,7 @@ public class CMDList implements CommandExecutor {
 		}
 		String worldName = args.<String>getOne("world").get();
 		
-		if(!Sponge.getServer().getWorld(worldName).isPresent()) {
+		if(!Sponge.getServer().getWorld(worldName).isPresent() && !worldName.equalsIgnoreCase("global")) {
 			src.sendMessage(Text.of(TextColors.RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}

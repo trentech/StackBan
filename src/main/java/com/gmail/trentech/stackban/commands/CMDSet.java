@@ -18,7 +18,7 @@ import ninja.leaping.configurate.ConfigurationNode;
 public class CMDSet implements CommandExecutor {
 
 	public CMDSet() {
-		Help help = new Help("set", "set", " Set item in ban list. All actions are banned by default. To unban action add corresponding flag");
+		Help help = new Help("set", "set", " Set item in ban list. All actions are banned by default. To unban action add corresponding flag. set <world> to 'global' to ban in all worlds");
 		help.setSyntax(" /sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]\n /b s <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]");
 		help.setExample(" /sban set world minecraft:stone\n /sban set minecraft:wool:5");
 		help.save();
@@ -32,7 +32,7 @@ public class CMDSet implements CommandExecutor {
 		}
 		String worldName = args.<String>getOne("world").get();
 		
-		if(!Sponge.getServer().getWorld(worldName).isPresent()) {
+		if(!Sponge.getServer().getWorld(worldName).isPresent() && !worldName.equalsIgnoreCase("global")) {
 			src.sendMessage(Text.of(TextColors.RED, worldName, " does not exist"));
 			return CommandResult.empty();
 		}

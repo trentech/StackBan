@@ -219,7 +219,7 @@ public class EventListener {
 
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
 
-				Sponge.getScheduler().createTaskBuilder().delayTicks(2).execute(c -> transaction.getSlot().clear()).submit(Main.getPlugin());
+				Sponge.getScheduler().createTaskBuilder().delayTicks(2).execute(c -> transaction.getSlot().clear()).submit(Main.instance().getPlugin());
 			}
 		}
 	}
@@ -264,7 +264,7 @@ public class EventListener {
 
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
 
-				Sponge.getScheduler().createTaskBuilder().delayTicks(2).execute(c -> transaction.getSlot().clear()).submit(Main.getPlugin());
+				Sponge.getScheduler().createTaskBuilder().delayTicks(2).execute(c -> transaction.getSlot().clear()).submit(Main.instance().getPlugin());
 			}
 		}
 	}
@@ -287,7 +287,7 @@ public class EventListener {
 
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
 
-				Sponge.getScheduler().createTaskBuilder().delayTicks(2).execute(c -> transaction.getSlot().clear()).submit(Main.getPlugin());
+				Sponge.getScheduler().createTaskBuilder().delayTicks(2).execute(c -> transaction.getSlot().clear()).submit(Main.instance().getPlugin());
 			}
 		}
 	}
@@ -362,7 +362,7 @@ public class EventListener {
 			message = message.replaceAll("%ITEM%", itemType);
 		}
 
-		Main.getLog().info(message);
+		Main.instance().getLog().info(message);
 
 		for (Player player : Sponge.getServer().getOnlinePlayers()) {
 			if (player.hasPermission("stackban.log")) {

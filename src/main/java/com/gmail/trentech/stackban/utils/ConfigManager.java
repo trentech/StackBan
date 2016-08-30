@@ -1,7 +1,8 @@
 package com.gmail.trentech.stackban.utils;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.spongepowered.api.item.ItemTypes;
@@ -14,20 +15,24 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 
 public class ConfigManager {
 
-	private File file;
+	private Path path;
 	private CommentedConfigurationNode config;
 	private ConfigurationLoader<CommentedConfigurationNode> loader;
 	
 	private static ConcurrentHashMap<String, ConfigManager> configManagers = new ConcurrentHashMap<>();
 
 	private ConfigManager(String configName) {
-		String folder = "config" + File.separator + Resource.ID;
-		if (!new File(folder).isDirectory()) {
-			new File(folder).mkdirs();
+		try {
+			path = Main.instance().getPath().resolve(configName + ".conf");
+			
+			if (!Files.exists(path)) {		
+				Files.createFile(path);
+				Main.instance().getLog().info("Creating new " + path.getFileName() + " file...");
+			}		
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		file = new File(folder, configName + ".conf");
 
-		create();
 		load();
 	}
 	
@@ -39,26 +44,6 @@ public class ConfigManager {
 		return configManagers.get("config");
 	}
 	
-	public ConfigurationLoader<CommentedConfigurationNode> getLoader() {
-		return loader;
-	}
-
-	public CommentedConfigurationNode getConfig() {
-		return config;
-	}
-
-	private void create() {
-		if (!file.exists()) {
-			try {
-				Main.getLog().info("Creating new " + file.getName() + " file...");
-				file.createNewFile();
-			} catch (IOException e) {
-				Main.getLog().error("Failed to create new config file");
-				e.printStackTrace();
-			}
-		}
-	}
-
 	public static ConfigManager init() {
 		return init("config");
 	}
@@ -94,13 +79,22 @@ public class ConfigManager {
 
 		return configManager;
 	}
+	
+	public ConfigurationLoader<CommentedConfigurationNode> getLoader() {
+		return loader;
+	}
+
+	public CommentedConfigurationNode getConfig() {
+		return config;
+	}
 
 	private void load() {
-		loader = HoconConfigurationLoader.builder().setFile(file).build();
+		loader = HoconConfigurationLoader.builder().setPath(path).build();
+		
 		try {
 			config = loader.load();
 		} catch (IOException e) {
-			Main.getLog().error("Failed to load config");
+			Main.instance().getLog().error("Failed to load config");
 			e.printStackTrace();
 		}
 	}
@@ -109,7 +103,7 @@ public class ConfigManager {
 		try {
 			loader.save(config);
 		} catch (IOException e) {
-			Main.getLog().error("Failed to save config");
+			Main.instance().getLog().error("Failed to save config");
 			e.printStackTrace();
 		}
 	}

@@ -23,14 +23,12 @@ public class CMDLog implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if (!args.hasAny("boolean")) {
-			src.sendMessage(Text.of(TextColors.YELLOW, "/sban log <boolean>"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.YELLOW, "/sban log <boolean>"));
 		}
 		String value = args.<String>getOne("boolean").get();
 
 		if (!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")) {
-			src.sendMessage(Text.of(TextColors.YELLOW, "/sban log <boolean>"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.YELLOW, "/sban log <boolean>"));
 		}
 
 		ConfigManager configManager = ConfigManager.get();

@@ -27,32 +27,27 @@ public class CMDSet implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if (!args.hasAny("world")) {
-			src.sendMessage(Text.of(TextColors.YELLOW, "/sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.YELLOW, "/sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]"));
 		}
 		String worldName = args.<String>getOne("world").get();
 		
 		if(!Sponge.getServer().getWorld(worldName).isPresent() && !worldName.equalsIgnoreCase("global")) {
-			src.sendMessage(Text.of(TextColors.RED, worldName, " does not exist"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"));
 		}
 		
 		if (!args.hasAny("item")) {
-			src.sendMessage(Text.of(TextColors.YELLOW, "/sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.YELLOW, "/sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]"));
 		}
 		String itemType = args.<String>getOne("item").get();
 
 		String[] check = itemType.split(":");
 
 		if (check.length < 2) {
-			src.sendMessage(Text.of(TextColors.YELLOW, "/sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.YELLOW, "/sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]"));
 		}
 
 		if (!Sponge.getRegistry().getType(ItemType.class, check[0] + ":" + check[1]).isPresent()) {
-			src.sendMessage(Text.of(TextColors.RED, "Not a valid ItemType"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, "Not a valid ItemType"));
 		}
 
 		ConfigManager configManager = ConfigManager.get(worldName);

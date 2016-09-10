@@ -33,14 +33,12 @@ public class CMDList implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if (!args.hasAny("world")) {
-			src.sendMessage(Text.of(TextColors.YELLOW, "/sban list <world>"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.YELLOW, "/sban list <world>"));
 		}
 		String worldName = args.<String>getOne("world").get();
 		
 		if(!Sponge.getServer().getWorld(worldName).isPresent() && !worldName.equalsIgnoreCase("global")) {
-			src.sendMessage(Text.of(TextColors.RED, worldName, " does not exist"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"));
 		}
 		
 		List<Text> list = new ArrayList<>();

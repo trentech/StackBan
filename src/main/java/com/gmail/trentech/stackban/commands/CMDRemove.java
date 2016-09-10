@@ -26,19 +26,16 @@ public class CMDRemove implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if (!args.hasAny("world")) {
-			src.sendMessage(Text.of(TextColors.YELLOW, "/sban remove <world> <modid:itemType[:id]>"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.YELLOW, "/sban remove <world> <modid:itemType[:id]>"));
 		}
 		String worldName = args.<String>getOne("world").get();
 		
 		if(!Sponge.getServer().getWorld(worldName).isPresent() && !worldName.equalsIgnoreCase("global")) {
-			src.sendMessage(Text.of(TextColors.RED, worldName, " does not exist"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"));
 		}
 		
 		if (!args.hasAny("item")) {
-			src.sendMessage(Text.of(TextColors.YELLOW, "/sban remove <world> <modid:itemType[:id]>"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.YELLOW, "/sban remove <world> <modid:itemType[:id]>"));
 		}
 		String itemType = args.<String>getOne("item").get();
 
@@ -46,8 +43,7 @@ public class CMDRemove implements CommandExecutor {
 		ConfigurationNode config = configManager.getConfig();
 
 		if (config.getNode("items", itemType).isVirtual()) {
-			src.sendMessage(Text.of(TextColors.RED, itemType, " does not exist"));
-			return CommandResult.empty();
+			throw new CommandException(Text.of(TextColors.RED, itemType, " does not exist"));
 		}
 
 		config.getNode("items").removeChild(itemType);

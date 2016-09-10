@@ -137,7 +137,12 @@ public class EventListener {
 				continue;
 			}
 
-			ItemStack itemStack = ItemStack.builder().fromBlockSnapshot(snapshot).build();
+			ItemStack itemStack;
+			try {
+				itemStack = ItemStack.builder().fromBlockSnapshot(snapshot).build();
+			} catch (Exception e) {
+				return;
+			}			
 
 			if (isBanned(player.getWorld(), itemStack, Action.PLACE)) {
 				log(player, itemStack, Action.PLACE);
@@ -162,7 +167,12 @@ public class EventListener {
 				continue;
 			}
 
-			ItemStack itemStack = ItemStack.builder().fromBlockSnapshot(snapshot).build();
+			ItemStack itemStack;
+			try {
+				itemStack = ItemStack.builder().fromBlockSnapshot(snapshot).build();
+			} catch (Exception e) {
+				return;
+			}
 
 			if (isBanned(player.getWorld(), itemStack, Action.MODIFY)) {		
 				log(player, itemStack, Action.MODIFY);
@@ -187,7 +197,12 @@ public class EventListener {
 				continue;
 			}
 
-			ItemStack itemStack = ItemStack.builder().fromBlockSnapshot(snapshot).build();
+			ItemStack itemStack;
+			try {
+				itemStack = ItemStack.builder().fromBlockSnapshot(snapshot).build();
+			} catch (Exception e) {
+				return;
+			}
 
 			if (isBanned(player.getWorld(), itemStack, Action.BREAK)) {
 				log(player, itemStack, Action.BREAK);
@@ -219,7 +234,7 @@ public class EventListener {
 
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
 
-				Sponge.getScheduler().createTaskBuilder().delayTicks(2).execute(c -> transaction.getSlot().clear()).submit(Main.instance().getPlugin());
+				Sponge.getScheduler().createTaskBuilder().delayTicks(2).execute(c -> transaction.getSlot().clear()).submit(Main.getPlugin());
 			}
 		}
 	}
@@ -264,7 +279,7 @@ public class EventListener {
 
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
 
-				Sponge.getScheduler().createTaskBuilder().delayTicks(2).execute(c -> transaction.getSlot().clear()).submit(Main.instance().getPlugin());
+				Sponge.getScheduler().createTaskBuilder().delayTicks(2).execute(c -> transaction.getSlot().clear()).submit(Main.getPlugin());
 			}
 		}
 	}
@@ -287,7 +302,7 @@ public class EventListener {
 
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
 
-				Sponge.getScheduler().createTaskBuilder().delayTicks(2).execute(c -> transaction.getSlot().clear()).submit(Main.instance().getPlugin());
+				Sponge.getScheduler().createTaskBuilder().delayTicks(2).execute(c -> transaction.getSlot().clear()).submit(Main.getPlugin());
 			}
 		}
 	}

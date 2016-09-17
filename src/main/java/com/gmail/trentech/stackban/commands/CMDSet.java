@@ -26,28 +26,22 @@ public class CMDSet implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if (!args.hasAny("world")) {
-			throw new CommandException(Text.of(TextColors.YELLOW, "/sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]"));
-		}
 		String worldName = args.<String>getOne("world").get();
-		
+
 		if(!Sponge.getServer().getWorld(worldName).isPresent() && !worldName.equalsIgnoreCase("global")) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"));
+			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"), false);
 		}
-		
-		if (!args.hasAny("item")) {
-			throw new CommandException(Text.of(TextColors.YELLOW, "/sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]"));
-		}
+
 		String itemType = args.<String>getOne("item").get();
 
 		String[] check = itemType.split(":");
 
 		if (check.length < 2) {
-			throw new CommandException(Text.of(TextColors.YELLOW, "/sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]"));
+			throw new CommandException(Text.of(TextColors.RED, "Not a valid ItemType"), true);
 		}
 
 		if (!Sponge.getRegistry().getType(ItemType.class, check[0] + ":" + check[1]).isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, "Not a valid ItemType"));
+			throw new CommandException(Text.of(TextColors.RED, "Not a valid ItemType"), true);
 		}
 
 		ConfigManager configManager = ConfigManager.get(worldName);

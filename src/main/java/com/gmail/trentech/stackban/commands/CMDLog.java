@@ -22,18 +22,11 @@ public class CMDLog implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		if (!args.hasAny("boolean")) {
-			throw new CommandException(Text.of(TextColors.YELLOW, "/sban log <boolean>"));
-		}
-		String value = args.<String>getOne("boolean").get();
-
-		if (!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")) {
-			throw new CommandException(Text.of(TextColors.YELLOW, "/sban log <boolean>"));
-		}
+		boolean value = args.<Boolean>getOne("boolean").get();
 
 		ConfigManager configManager = ConfigManager.get();
 
-		configManager.getConfig().getNode("console_log").setValue(Boolean.valueOf(value));
+		configManager.getConfig().getNode("console_log").setValue(value);
 		configManager.save();
 
 		src.sendMessage(Text.of(TextColors.GREEN, "Set ban logging to ", value));

@@ -29,14 +29,14 @@ public class CMDWhatsThis implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if (!(src instanceof Player)) {
-			throw new CommandException(Text.of(TextColors.RED, "Must be a player"));
+			throw new CommandException(Text.of(TextColors.RED, "Must be a player"), false);
 		}
 		Player player = (Player) src;
 
 		Optional<ItemStack> optionalItemStack = player.getItemInHand(HandTypes.MAIN_HAND);
 
 		if (!optionalItemStack.isPresent()) {
-			throw new CommandException(Text.of(TextColors.YELLOW, "You must be holding an item"));
+			throw new CommandException(Text.of(TextColors.YELLOW, "You must be holding an item"), false);
 		}
 		ItemStack itemStack = optionalItemStack.get();
 

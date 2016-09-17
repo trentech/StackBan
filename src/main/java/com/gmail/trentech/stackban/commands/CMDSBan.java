@@ -2,6 +2,8 @@ package com.gmail.trentech.stackban.commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Map.Entry;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
@@ -24,20 +26,21 @@ public class CMDSBan implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		List<Text> list = new ArrayList<>();
 
-		if (src.hasPermission("stackban.cmd.sban.set")) {
-			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp("set"))).append(Text.of(" /sban set")).build());
-		}
-		if (src.hasPermission("stackban.cmd.sban.remove")) {
-			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp("remove"))).append(Text.of(" /sban remove")).build());
-		}
-		if (src.hasPermission("stackban.cmd.sban.list")) {
-			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp("list"))).append(Text.of(" /sban list")).build());
-		}
-		if (src.hasPermission("stackban.cmd.sban.log")) {
-			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp("log"))).append(Text.of(" /sban log")).build());
-		}
-		if (src.hasPermission("stackban.cmd.whatsthis")) {
-			list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp("whatsthis"))).append(Text.of(" /whatsthis")).build());
+		list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command to execute "))).onClick(TextActions.runCommand("/stackban:sban help")).append(Text.of(" /sban help")).build());
+		
+		for (Entry<String, Help> entry : Help.all().entrySet()) {
+			String id = entry.getKey();
+			String command = entry.getValue().getCommand();
+			
+			Optional<String> optionalPermission = entry.getValue().getPermission();
+			
+			if(optionalPermission.isPresent()) {
+				if (src.hasPermission(optionalPermission.get())) {
+					list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp(id))).append(Text.of(" /sban " + command)).build());
+				}
+			} else {
+				list.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.getHelp(id))).append(Text.of(" /sban " + command)).build());
+			}
 		}
 
 		if (src instanceof Player) {

@@ -55,7 +55,6 @@ public class Main {
 		
 		Sponge.getEventManager().registerListeners(this, new EventListener());
 		Sponge.getCommandManager().register(this, new CommandManager().cmdSBan, "sban", "sb");
-		Sponge.getCommandManager().register(this, new CommandManager().cmdWhatsThis, "whatsthis", "wt");
 	}
 
 	@Listener

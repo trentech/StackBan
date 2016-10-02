@@ -14,7 +14,7 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.command.TabCompleteEvent;
-import org.spongepowered.api.event.filter.cause.First;
+import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.filter.type.Exclude;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
 import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
@@ -125,7 +125,7 @@ public class EventListener {
 	}
 
 	@Listener
-	public void onChangeBlockEvent(ChangeBlockEvent.Place event, @First Player player) {
+	public void onChangeBlockEvent(ChangeBlockEvent.Place event, @Root Player player) {
 		if (player.hasPermission("stackban.admin")) {
 			return;
 		}
@@ -155,7 +155,7 @@ public class EventListener {
 	}
 
 	@Listener
-	public void onChangeBlockEvent(ChangeBlockEvent.Modify event, @First Player player) {
+	public void onChangeBlockEvent(ChangeBlockEvent.Modify event, @Root Player player) {
 		if (player.hasPermission("stackban.admin")) {
 			return;
 		}
@@ -185,7 +185,7 @@ public class EventListener {
 	}
 
 	@Listener
-	public void onChangeBlockEvent(ChangeBlockEvent.Break event, @First Player player) {
+	public void onChangeBlockEvent(ChangeBlockEvent.Break event, @Root Player player) {
 		if (player.hasPermission("stackban.admin")) {
 			return;
 		}
@@ -217,7 +217,7 @@ public class EventListener {
 	// NOT WORKING
 	@Listener
 	@Exclude({ ClickInventoryEvent.Drop.class })
-	public void onClickInventoryEvent(ClickInventoryEvent event, @First Player player) {
+	public void onClickInventoryEvent(ClickInventoryEvent event, @Root Player player) {
 		if (player.hasPermission("stackban.admin")) {
 			return;
 		}
@@ -241,7 +241,7 @@ public class EventListener {
 
 	// NOT WORKING
 	@Listener
-	public void onDropItemEvent(DropItemEvent.Pre event, @First Player player) {
+	public void onDropItemEvent(DropItemEvent.Pre event, @Root Player player) {
 		System.out.println("DROP");
 
 		for (ItemStackSnapshot snapshot : event.getDroppedItems()) {
@@ -262,7 +262,7 @@ public class EventListener {
 	}
 
 	@Listener
-	public void onChangeInventoryEvent(ChangeInventoryEvent.Held event, @First Player player) {
+	public void onChangeInventoryEvent(ChangeInventoryEvent.Held event, @Root Player player) {
 		if (player.hasPermission("stackban.admin")) {
 			return;
 		}
@@ -285,7 +285,7 @@ public class EventListener {
 	}
 
 	@Listener(order = Order.POST)
-	public void onChangeInventoryEvent(ChangeInventoryEvent.Pickup event, @First Player player) {
+	public void onChangeInventoryEvent(ChangeInventoryEvent.Pickup event, @Root Player player) {
 		if (player.hasPermission("stackban.admin")) {
 			return;
 		}
@@ -308,7 +308,7 @@ public class EventListener {
 	}
 
 	@Listener
-	public void onUseItemStackEvent(UseItemStackEvent.Start event, @First Player player) {
+	public void onUseItemStackEvent(UseItemStackEvent.Start event, @Root Player player) {
 		if (player.hasPermission("stackban.admin")) {
 			return;
 		}

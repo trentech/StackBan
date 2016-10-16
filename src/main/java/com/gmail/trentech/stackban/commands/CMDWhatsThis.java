@@ -20,10 +20,10 @@ import com.gmail.trentech.stackban.utils.Help;
 public class CMDWhatsThis implements CommandExecutor {
 
 	public CMDWhatsThis() {
-		Help help = new Help("whatsthis", "whatsthis", " If you are not sure the itemtype or varient of an item, use this command to find out the item that is in players hand");
-		help.setSyntax(" /whatsthis\n /wt");
-		help.setExample(" /whatsthis");
-		help.save();
+		new Help("whatsthis", "whatsthis", "If you are not sure the itemtype or varient of an item, use this command to find out the item that is in players hand", false)
+			.setUsage("/whatsthis\n /wt")
+			.setExample("/whatsthis")
+			.save();
 	}
 
 	@Override

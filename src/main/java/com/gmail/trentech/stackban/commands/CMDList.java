@@ -24,10 +24,10 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 public class CMDList implements CommandExecutor {
 
 	public CMDList() {
-		Help help = new Help("list", "list", " List all banned items");
-		help.setSyntax(" /sban list <world>\n /sb ls <world>");
-		help.setExample(" /sban list world");
-		help.save();
+		new Help("list", "list", "List all banned items", false)
+			.setUsage("/sban list <world>\n /sb ls <world>")
+			.setExample("/sban list world")
+			.save();
 	}
 
 	@Override

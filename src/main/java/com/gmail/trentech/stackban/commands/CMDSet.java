@@ -18,10 +18,10 @@ import ninja.leaping.configurate.ConfigurationNode;
 public class CMDSet implements CommandExecutor {
 
 	public CMDSet() {
-		Help help = new Help("set", "set", " Set item in ban list. All actions are banned by default. To unban action add corresponding flag. set <world> to 'global' to ban in all worlds");
-		help.setSyntax(" /sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]\n /b s <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]");
-		help.setExample(" /sban set world minecraft:stone\n /sban set minecraft:wool:5");
-		help.save();
+		new Help("set", "set", "Set item in ban list. All actions are banned by default. To unban action add corresponding flag. set <world> to 'global' to ban in all worlds", false)
+			.setUsage("/sban set <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]\n /b s <world> <modid:itemType[:id]> [--break] [--craft] [--drop] [--modify] [--pickup] [--place] [--use]")
+			.setExample("/sban set world minecraft:stone\n /sban set minecraft:wool:5")
+			.save();
 	}
 
 	@Override

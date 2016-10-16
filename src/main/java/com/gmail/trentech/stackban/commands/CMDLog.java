@@ -14,10 +14,10 @@ import com.gmail.trentech.stackban.utils.Help;
 public class CMDLog implements CommandExecutor {
 
 	public CMDLog() {
-		Help help = new Help("add", "add", " Log to console when player triggers banned item event");
-		help.setSyntax(" /sban log <boolean>\n /b a <boolean>");
-		help.setExample(" /sban log true\n /sban add false");
-		help.save();
+		new Help("add", "add", "Log to console when player triggers banned item event", false)
+			.setUsage("/sban log <boolean>\n /b a <boolean>")
+			.setExample("/sban log true\n /sban add false")
+			.save();
 	}
 
 	@Override

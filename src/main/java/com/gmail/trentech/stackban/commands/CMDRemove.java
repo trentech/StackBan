@@ -17,10 +17,10 @@ import ninja.leaping.configurate.ConfigurationNode;
 public class CMDRemove implements CommandExecutor {
 
 	public CMDRemove() {
-		Help help = new Help("remove", "remove", " Remove item from ban list. set <world> to 'global' to remove from global config");
-		help.setSyntax(" /sban remove <modid:itemType[:id]>\n /b r <modid:itemType[:id]>");
-		help.setExample(" /sban remove minecraft:stone");
-		help.save();
+		new Help("remove", "remove", "Remove item from ban list. set <world> to 'global' to remove from global config", false)
+			.setUsage("/sban remove <modid:itemType[:id]>\n /b r <modid:itemType[:id]>")
+			.setExample("/sban remove minecraft:stone")
+			.save();
 	}
 
 	@Override

@@ -1,8 +1,5 @@
 package com.gmail.trentech.stackban;
 
-import java.util.List;
-import java.util.Map.Entry;
-
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
@@ -13,7 +10,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
-import org.spongepowered.api.event.command.TabCompleteEvent;
 import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.filter.type.Exclude;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
@@ -21,7 +17,6 @@ import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.item.inventory.UseItemStackEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
@@ -35,7 +30,6 @@ import com.gmail.trentech.stackban.utils.Action;
 import com.gmail.trentech.stackban.utils.ConfigManager;
 
 import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 
 public class EventListener {
 
@@ -44,84 +38,6 @@ public class EventListener {
 		String worldName = event.getTargetWorld().getName();
 		
 		ConfigManager.init(worldName);
-	}
-	
-	@Listener
-	public void onTabCompleteEvent(TabCompleteEvent event) {
-		String rawMessage = event.getRawMessage();
-
-		String[] args = rawMessage.split(" ");
-
-		List<String> list = event.getTabCompletions();
-
-		if ((args[0].equalsIgnoreCase("sban") || args[0].equalsIgnoreCase("sb")) && args.length > 1) {
-			if ((args[1].equalsIgnoreCase("set") || args[1].equalsIgnoreCase("s"))) {
-				if(args.length == 2 || args.length == 3) {
-					if((args.length == 2 && rawMessage.substring(rawMessage.length() - 1).equalsIgnoreCase(" ")) || (args.length == 3 && "global".contains(args[2].toLowerCase()) && !"global".equalsIgnoreCase(args[2]))) {
-						list.add("global");
-					}
-					
-					for(World world : Sponge.getServer().getWorlds()) {
-						String name = world.getName();
-						
-						if (args.length == 3) {
-							if (name.contains(args[2].toLowerCase()) && !name.equalsIgnoreCase(args[2])) {
-								list.add(name);
-							}
-						} else if (rawMessage.substring(rawMessage.length() - 1).equalsIgnoreCase(" ")) {
-							list.add(name);
-						}
-					}
-				}
-				if(args.length == 3 || args.length == 4) {
-					for (ItemType itemType : Sponge.getRegistry().getAllOf(ItemType.class)) {
-						String id = itemType.getId();
-
-						if (args.length == 4) {
-							if (id.contains(args[3].toLowerCase()) && !id.equalsIgnoreCase(args[3])) {
-								list.add(id);
-							}
-						} else if (rawMessage.substring(rawMessage.length() - 1).equalsIgnoreCase(" ")) {
-							list.add(id);
-						}
-					}
-				}
-
-			} else if ((args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("r"))) {
-				if(args.length == 2 || args.length == 3) {
-					if((args.length == 2 && rawMessage.substring(rawMessage.length() - 1).equalsIgnoreCase(" ")) || (args.length == 3 && "global".contains(args[2].toLowerCase()) && !"global".equalsIgnoreCase(args[2]))) {
-						list.add("global");
-					}
-					
-					for(World world : Sponge.getServer().getWorlds()) {
-						String name = world.getName();
-						
-						if (args.length == 3) {
-							if (name.contains(args[2].toLowerCase()) && !name.equalsIgnoreCase(args[2])) {
-								list.add(name);
-							}
-						} else if (rawMessage.substring(rawMessage.length() - 1).equalsIgnoreCase(" ")) {
-							list.add(name);
-						}
-					}
-				}
-				if(args.length == 3 || args.length == 4) {					
-					if(Sponge.getServer().getWorld(args[2]).isPresent() || args[2].equalsIgnoreCase("global")) {
-						for (Entry<Object, ? extends CommentedConfigurationNode> item : ConfigManager.get(args[2]).getConfig().getNode("items").getChildrenMap().entrySet()) {
-							String id = item.getValue().getKey().toString();
-
-							if (args.length == 4) {
-								if (id.contains(args[3].toLowerCase()) && !id.equalsIgnoreCase(args[3])) {
-									list.add(id);
-								}
-							} else if (rawMessage.substring(rawMessage.length() - 1).equalsIgnoreCase(" ")) {
-								list.add(id);
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	@Listener

@@ -17,6 +17,7 @@ import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.stackban.commands.CommandManager;
+import com.gmail.trentech.stackban.utils.CommandHelp;
 import com.gmail.trentech.stackban.utils.ConfigManager;
 import com.gmail.trentech.stackban.utils.Resource;
 import com.google.inject.Inject;
@@ -24,7 +25,7 @@ import com.google.inject.Inject;
 import me.flibio.updatifier.Updatifier;
 
 @Updatifier(repoName = Resource.NAME, repoOwner = Resource.AUTHOR, version = Resource.VERSION)
-@Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION, description = Resource.DESCRIPTION, authors = Resource.AUTHOR, url = Resource.URL, dependencies = { @Dependency(id = "Updatifier", optional = true) })
+@Plugin(id = Resource.ID, name = Resource.NAME, version = Resource.VERSION, description = Resource.DESCRIPTION, authors = Resource.AUTHOR, url = Resource.URL, dependencies = { @Dependency(id = "Updatifier", optional = true), @Dependency(id = "helpme", version = "0.2.1", optional = true) })
 public class Main {
 
 	@Inject @ConfigDir(sharedRoot = false)
@@ -55,6 +56,8 @@ public class Main {
 		
 		Sponge.getEventManager().registerListeners(this, new EventListener());
 		Sponge.getCommandManager().register(this, new CommandManager().cmdSBan, "sban", "sb");
+		
+		CommandHelp.init();
 	}
 
 	@Listener

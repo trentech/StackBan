@@ -17,27 +17,15 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import com.gmail.trentech.stackban.utils.ConfigManager;
-import com.gmail.trentech.stackban.utils.Help;
 
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 
 public class CMDList implements CommandExecutor {
 
-	public CMDList() {
-		new Help("list", "list", "List all banned items", false)
-			.setUsage("/sban list <world>\n /sb ls <world>")
-			.setExample("/sban list world")
-			.save();
-	}
-
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		String worldName = args.<String>getOne("world").get();
 
-		if(!Sponge.getServer().getWorld(worldName).isPresent() && !worldName.equalsIgnoreCase("global")) {
-			throw new CommandException(Text.of(TextColors.RED, worldName, " does not exist"), false);
-		}
-		
 		List<Text> list = new ArrayList<>();
 
 		for (Entry<Object, ? extends CommentedConfigurationNode> item : ConfigManager.get(worldName).getConfig().getNode("items").getChildrenMap().entrySet()) {

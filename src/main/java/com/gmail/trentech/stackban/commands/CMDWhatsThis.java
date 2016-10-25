@@ -15,16 +15,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import com.gmail.trentech.stackban.utils.Help;
-
 public class CMDWhatsThis implements CommandExecutor {
-
-	public CMDWhatsThis() {
-		new Help("whatsthis", "whatsthis", "If you are not sure the itemtype or varient of an item, use this command to find out the item that is in players hand", false)
-			.setUsage("/whatsthis\n /wt")
-			.setExample("/whatsthis")
-			.save();
-	}
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {

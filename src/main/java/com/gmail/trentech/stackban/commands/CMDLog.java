@@ -9,20 +9,12 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import com.gmail.trentech.stackban.utils.ConfigManager;
-import com.gmail.trentech.stackban.utils.Help;
 
 public class CMDLog implements CommandExecutor {
 
-	public CMDLog() {
-		new Help("add", "add", "Log to console when player triggers banned item event", false)
-			.setUsage("/sban log <boolean>\n /b a <boolean>")
-			.setExample("/sban log true\n /sban add false")
-			.save();
-	}
-
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		boolean value = args.<Boolean>getOne("boolean").get();
+		boolean value = args.<Boolean>getOne("true|false").get();
 
 		ConfigManager configManager = ConfigManager.get();
 

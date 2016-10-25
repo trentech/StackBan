@@ -31,7 +31,7 @@ public class CommandHelp {
 		Usage usageRemove = new Usage(Argument.of("<world>", "Specifies the name of the targetted world or 'global' to effect all worlds"))
 				.addArgument(Argument.of("<itemType[:id]>", "Specifies the ItemType normally formatted <modid:itemName>. Optionally you can specify a raw data Id formatted <modid:itemName:id>"));
 			
-		Help sbanRemove = new Help("remove", "remove", "Remove item from ban list. set <world> to 'global' to remove from global config")
+		Help sbanRemove = new Help("sban remove", "remove", "Remove item from ban list. set <world> to 'global' to remove from global config")
 				.setPermission("stackban.cmd.sban.remove")
 				.setUsage(usageRemove)
 				.addExample("/sban remove minecraft:stone");
@@ -46,7 +46,7 @@ public class CommandHelp {
 				.addArgument(Argument.of("[--place]", "Allowing placing banned item"))
 				.addArgument(Argument.of("[--use]", "Allowing interacting with banned item"));
 		
-		Help sbanSet = new Help("set", "set", "Set item in ban list. All actions are banned by default. To unban action add corresponding flag. set <world> to 'global' to ban in all worlds")
+		Help sbanSet = new Help("sban set", "set", "Set item in ban list. All actions are banned by default. To unban action add corresponding flag. set <world> to 'global' to ban in all worlds")
 				.setPermission("stackban.cmd.sban.set")
 				.setUsage(usageSet)
 				.addExample("/sban set world minecraft:stone")

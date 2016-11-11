@@ -18,7 +18,7 @@ public class CMDSet implements CommandExecutor {
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		String worldName = args.<String>getOne("world").get();
 
-		String itemType = args.<String>getOne("item").get();
+		String itemType = args.<String>getOne("itemType[:id]").get();
 
 		ConfigManager configManager = ConfigManager.get(worldName);
 		ConfigurationNode config = configManager.getConfig();

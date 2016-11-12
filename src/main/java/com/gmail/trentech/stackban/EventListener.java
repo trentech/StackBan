@@ -1,5 +1,7 @@
 package com.gmail.trentech.stackban;
 
+import java.util.Optional;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockTypes;
@@ -11,15 +13,15 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.filter.cause.Root;
-import org.spongepowered.api.event.filter.type.Exclude;
+import org.spongepowered.api.event.item.inventory.AffectSlotEvent;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
-import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.item.inventory.UseItemStackEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
+import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
@@ -130,53 +132,28 @@ public class EventListener {
 		}
 	}
 
-	// NOT WORKING
-	@Listener
-	@Exclude({ ClickInventoryEvent.Drop.class })
-	public void onClickInventoryEvent(ClickInventoryEvent event, @Root Player player) {
+	@Listener(order = Order.POST)
+	public void onAffectSlotEvent(AffectSlotEvent event, @Root Player player) {
 		if (player.hasPermission("stackban.admin")) {
 			return;
 		}
+		
+		for(SlotTransaction transaction : event.getTransactions()) {
+			Slot slot = transaction.getSlot();
+			Optional<ItemStack> optionalItem = slot.peek();
+			
+			if(optionalItem.isPresent()) {
+				if (isBanned(player.getWorld(), optionalItem.get(), Action.CRAFT)) {
+					log(player, optionalItem.get(), Action.CRAFT);
 
-		for (SlotTransaction transaction : event.getTransactions()) {
-			ItemStack itemStack = transaction.getFinal().createStack();
+					player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
 
-			if (itemStack.getItem().equals(ItemTypes.NONE)) {
-				continue;
-			}
-
-			if (isBanned(player.getWorld(), itemStack, Action.CRAFT)) {
-				log(player, itemStack, Action.CRAFT);
-
-				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
-
-				Sponge.getScheduler().createTaskBuilder().delayTicks(2).execute(c -> transaction.getSlot().clear()).submit(Main.getPlugin());
-			}
-		}
-	}
-
-	// NOT WORKING
-	@Listener
-	public void onDropItemEvent(DropItemEvent.Pre event, @Root Player player) {
-		System.out.println("DROP");
-
-		for (ItemStackSnapshot snapshot : event.getDroppedItems()) {
-			ItemStack itemStack = snapshot.createStack();
-
-			if (itemStack.getItem().equals(ItemTypes.NONE)) {
-				continue;
-			}
-
-			if (isBanned(player.getWorld(), itemStack, Action.DROP)) {
-				log(player, itemStack, Action.DROP);
-
-				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
-
-				event.setCancelled(true);
+					transaction.setValid(false);
+				}
 			}
 		}
 	}
-
+	
 	@Listener
 	public void onChangeInventoryEvent(ChangeInventoryEvent.Held event, @Root Player player) {
 		if (player.hasPermission("stackban.admin")) {
@@ -223,8 +200,33 @@ public class EventListener {
 		}
 	}
 
+	// NOT WORKING
+	@Listener
+	public void onDropItemEvent(DropItemEvent.Pre event, @Root Player player) {
+		System.out.println("DROP");
+
+		for (ItemStackSnapshot snapshot : event.getDroppedItems()) {
+			ItemStack itemStack = snapshot.createStack();
+
+			if (itemStack.getItem().equals(ItemTypes.NONE)) {
+				continue;
+			}
+
+			if (isBanned(player.getWorld(), itemStack, Action.DROP)) {
+				log(player, itemStack, Action.DROP);
+
+				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
+
+				event.setCancelled(true);
+			}
+		}
+	}
+	
+	// NOT WORKING
 	@Listener
 	public void onUseItemStackEvent(UseItemStackEvent.Start event, @Root Player player) {
+		System.out.println("USE");
+		
 		if (player.hasPermission("stackban.admin")) {
 			return;
 		}

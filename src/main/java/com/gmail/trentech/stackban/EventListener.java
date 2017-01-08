@@ -1,6 +1,5 @@
 package com.gmail.trentech.stackban;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
@@ -254,12 +253,10 @@ public class EventListener {
 		DataContainer container = itemStack.toContainer();
 		DataQuery query = DataQuery.of('/', "UnsafeDamage");
 
-
-
-		if (player.hasPermission("stackban.bypass." + itemType + ":" + container.get(query).get().toString()) ||
-				player.hasPermission("itemStack.bypass." + itemType))
+		if (player.hasPermission("stackban.bypass." + itemType + ":" + container.get(query).get().toString()) || player.hasPermission("itemStack.bypass." + itemType)) {
 			return false;
-
+		}
+		
 		ConfigurationNode config = ConfigManager.get(world.getName()).getConfig();
 
 		if (!config.getNode("items", itemType + ":" + container.get(query).get().toString()).isVirtual()) {

@@ -1,5 +1,6 @@
 package com.gmail.trentech.stackban;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
@@ -62,7 +63,7 @@ public class EventListener {
 				return;
 			}			
 
-			if (isBanned(player.getWorld(), itemStack, Action.PLACE)) {
+			if (isBanned(player, itemStack, Action.PLACE)) {
 				log(player, itemStack, Action.PLACE);
 
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
@@ -92,7 +93,7 @@ public class EventListener {
 				return;
 			}
 
-			if (isBanned(player.getWorld(), itemStack, Action.MODIFY)) {		
+			if (isBanned(player, itemStack, Action.MODIFY)) {
 				log(player, itemStack, Action.MODIFY);
 
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
@@ -122,7 +123,7 @@ public class EventListener {
 				return;
 			}
 
-			if (isBanned(player.getWorld(), itemStack, Action.BREAK)) {
+			if (isBanned(player, itemStack, Action.BREAK)) {
 				log(player, itemStack, Action.BREAK);
 
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
@@ -143,7 +144,7 @@ public class EventListener {
 			Optional<ItemStack> optionalItem = slot.peek();
 			
 			if(optionalItem.isPresent()) {
-				if (isBanned(player.getWorld(), optionalItem.get(), Action.CRAFT)) {
+				if (isBanned(player, optionalItem.get(), Action.CRAFT)) {
 					log(player, optionalItem.get(), Action.CRAFT);
 
 					player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
@@ -167,7 +168,7 @@ public class EventListener {
 				continue;
 			}
 
-			if (isBanned(player.getWorld(), itemStack, Action.HOLD)) {
+			if (isBanned(player, itemStack, Action.HOLD)) {
 				log(player, itemStack, Action.HOLD);
 
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
@@ -190,7 +191,7 @@ public class EventListener {
 				continue;
 			}
 
-			if (isBanned(player.getWorld(), itemStack, Action.PICKUP)) {
+			if (isBanned(player, itemStack, Action.PICKUP)) {
 				log(player, itemStack, Action.PICKUP);
 
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
@@ -212,7 +213,7 @@ public class EventListener {
 				continue;
 			}
 
-			if (isBanned(player.getWorld(), itemStack, Action.DROP)) {
+			if (isBanned(player, itemStack, Action.DROP)) {
 				log(player, itemStack, Action.DROP);
 
 				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
@@ -237,7 +238,7 @@ public class EventListener {
 			return;
 		}
 
-		if (isBanned(player.getWorld(), itemStack, Action.USE)) {
+		if (isBanned(player, itemStack, Action.USE)) {
 			log(player, itemStack, Action.USE);
 
 			player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
@@ -246,12 +247,19 @@ public class EventListener {
 		}
 	}
 
-	private boolean isBanned(World world, ItemStack itemStack, Action action) {
+	private boolean isBanned(Player player, ItemStack itemStack, Action action) {
+		World world = player.getWorld();
 		String itemType = itemStack.getItem().getId();
 
 		DataContainer container = itemStack.toContainer();
 		DataQuery query = DataQuery.of('/', "UnsafeDamage");
-		
+
+
+
+		if (player.hasPermission("stackban.bypass." + itemType + ":" + container.get(query).get().toString()) ||
+				player.hasPermission("itemStack.bypass." + itemType))
+			return false;
+
 		ConfigurationNode config = ConfigManager.get(world.getName()).getConfig();
 
 		if (!config.getNode("items", itemType + ":" + container.get(query).get().toString()).isVirtual()) {
@@ -271,7 +279,7 @@ public class EventListener {
 		if (!config.getNode("items", itemType).isVirtual()) {
 			return !config.getNode("items", itemType, action.getName()).getBoolean();
 		}
-		
+
 		return false;
 	}
 

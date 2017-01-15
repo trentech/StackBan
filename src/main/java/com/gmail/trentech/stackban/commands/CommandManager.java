@@ -11,26 +11,26 @@ public class CommandManager {
 
 	private CommandSpec cmdSet = CommandSpec.builder()
 			.permission("stackban.cmd.sban.set")
-			.arguments(new WorldElement(Text.of("world")), new ItemElement(Text.of("itemType[:id]")),
+			.arguments(GenericArguments.optional(new WorldElement(Text.of("world"))), GenericArguments.optional(new ItemElement(Text.of("itemType[:id]"))),
 					GenericArguments.flags().flag("break", "craft", "drop", "hold", "modify", "pickup", "place", "use").setAcceptsArbitraryLongFlags(true).buildWith(GenericArguments.none()))
 			.executor(new CMDSet())
 			.build();
 
 	private CommandSpec cmdRemove = CommandSpec.builder()
 			.permission("stackban.cmd.sban.remove")
-			.arguments(new WorldElement(Text.of("world")), new ItemElement(Text.of("itemType[:id]")))
+			.arguments(GenericArguments.optional(new WorldElement(Text.of("world"))), GenericArguments.optional(new ItemElement(Text.of("itemType[:id]"))))
 			.executor(new CMDRemove())
 			.build();
 
 	private CommandSpec cmdList = CommandSpec.builder()
 			.permission("stackban.cmd.sban.list")
-			.arguments(new WorldElement(Text.of("world")))
+			.arguments(GenericArguments.optional(new WorldElement(Text.of("world"))))
 			.executor(new CMDList())
 			.build();
 
 	private CommandSpec cmdLog = CommandSpec.builder()
 			.permission("stackban.cmd.sban.log")
-			.arguments(GenericArguments.bool(Text.of("true|false")))
+			.arguments(GenericArguments.optional(GenericArguments.bool(Text.of("true|false"))))
 			.executor(new CMDLog())
 			.build();
 

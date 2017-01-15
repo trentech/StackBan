@@ -6,8 +6,10 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 
+import com.gmail.trentech.helpme.help.Help;
 import com.gmail.trentech.stackban.utils.ConfigManager;
 
 import ninja.leaping.configurate.ConfigurationNode;
@@ -16,8 +18,16 @@ public class CMDSet implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		if (!args.hasAny("world")) {
+			Help help = Help.get("sban set").get();
+			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
+		}
 		String worldName = args.<String>getOne("world").get();
 
+		if (!args.hasAny("itemType[:id]")) {
+			Help help = Help.get("sban set").get();
+			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
+		}
 		String itemType = args.<String>getOne("itemType[:id]").get();
 
 		ConfigManager configManager = ConfigManager.get(worldName);

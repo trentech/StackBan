@@ -14,8 +14,10 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 
+import com.gmail.trentech.helpme.help.Help;
 import com.gmail.trentech.stackban.utils.ConfigManager;
 
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
@@ -24,6 +26,10 @@ public class CMDList implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+		if (!args.hasAny("world")) {
+			Help help = Help.get("sban list").get();
+			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
+		}
 		String worldName = args.<String>getOne("world").get();
 
 		List<Text> list = new ArrayList<>();

@@ -200,11 +200,8 @@ public class EventListener {
 		}
 	}
 
-	// NOT WORKING
 	@Listener
 	public void onDropItemEvent(DropItemEvent.Pre event, @Root Player player) {
-		System.out.println("DROP");
-
 		for (ItemStackSnapshot snapshot : event.getDroppedItems()) {
 			ItemStack itemStack = snapshot.createStack();
 

@@ -28,8 +28,9 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.world.World;
 
+import com.gmail.trentech.pjc.core.ConfigManager;
+import com.gmail.trentech.stackban.init.Common;
 import com.gmail.trentech.stackban.utils.Action;
-import com.gmail.trentech.stackban.utils.ConfigManager;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
@@ -39,7 +40,7 @@ public class EventListener {
 	public void onLoadWorldEvent(LoadWorldEvent event) {
 		String worldName = event.getTargetWorld().getName();
 		
-		ConfigManager.init(worldName);
+		Common.initConfig(worldName);
 	}
 
 	@Listener
@@ -254,7 +255,7 @@ public class EventListener {
 			return false;
 		}
 		
-		ConfigurationNode config = ConfigManager.get(world.getName()).getConfig();
+		ConfigurationNode config = ConfigManager.get(Main.getPlugin(), world.getName()).getConfig();
 
 		if (!config.getNode("items", itemType + ":" + container.get(query).get().toString()).isVirtual()) {
 			return !config.getNode("items", itemType + ":" + container.get(query).get().toString(), action.getName()).getBoolean();
@@ -264,7 +265,7 @@ public class EventListener {
 			return !config.getNode("items", itemType, action.getName()).getBoolean();
 		}
 
-		config = ConfigManager.get("global").getConfig();
+		config = ConfigManager.get(Main.getPlugin(), "global").getConfig();
 
 		if (!config.getNode("items", itemType + ":" + container.get(query).get().toString()).isVirtual()) {
 			return !config.getNode("items", itemType + ":" + container.get(query).get().toString(), action.getName()).getBoolean();
@@ -278,7 +279,7 @@ public class EventListener {
 	}
 
 	public void log(Player user, ItemStack itemStack, Action action) {
-		if (!ConfigManager.get().getConfig().getNode("console_log").getBoolean()) {
+		if (!ConfigManager.get(Main.getPlugin()).getConfig().getNode("console_log").getBoolean()) {
 			return;
 		}
 		

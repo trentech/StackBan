@@ -9,8 +9,9 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 
-import com.gmail.trentech.helpme.help.Help;
-import com.gmail.trentech.stackban.utils.ConfigManager;
+import com.gmail.trentech.pjc.core.ConfigManager;
+import com.gmail.trentech.pjc.help.Help;
+import com.gmail.trentech.stackban.Main;
 
 public class CMDLog implements CommandExecutor {
 
@@ -22,7 +23,7 @@ public class CMDLog implements CommandExecutor {
 		}
 		boolean value = args.<Boolean>getOne("true|false").get();
 
-		ConfigManager configManager = ConfigManager.get();
+		ConfigManager configManager = ConfigManager.get(Main.getPlugin());
 
 		configManager.getConfig().getNode("console_log").setValue(value);
 		configManager.save();

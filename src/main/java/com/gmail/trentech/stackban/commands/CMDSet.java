@@ -9,8 +9,9 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 
-import com.gmail.trentech.helpme.help.Help;
-import com.gmail.trentech.stackban.utils.ConfigManager;
+import com.gmail.trentech.pjc.core.ConfigManager;
+import com.gmail.trentech.pjc.help.Help;
+import com.gmail.trentech.stackban.Main;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
@@ -30,7 +31,7 @@ public class CMDSet implements CommandExecutor {
 		}
 		String itemType = args.<String>getOne("itemType[:id]").get();
 
-		ConfigManager configManager = ConfigManager.get(worldName);
+		ConfigManager configManager = ConfigManager.get(Main.getPlugin(), worldName);
 		ConfigurationNode config = configManager.getConfig();
 
 		config.getNode("items", itemType, "place").setValue(args.hasAny("place"));

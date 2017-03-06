@@ -17,8 +17,9 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 
-import com.gmail.trentech.helpme.help.Help;
-import com.gmail.trentech.stackban.utils.ConfigManager;
+import com.gmail.trentech.pjc.core.ConfigManager;
+import com.gmail.trentech.pjc.help.Help;
+import com.gmail.trentech.stackban.Main;
 
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 
@@ -34,7 +35,7 @@ public class CMDList implements CommandExecutor {
 
 		List<Text> list = new ArrayList<>();
 
-		for (Entry<Object, ? extends CommentedConfigurationNode> item : ConfigManager.get(worldName).getConfig().getNode("items").getChildrenMap().entrySet()) {
+		for (Entry<Object, ? extends CommentedConfigurationNode> item : ConfigManager.get(Main.getPlugin(), worldName).getConfig().getNode("items").getChildrenMap().entrySet()) {
 			list.add(Text.of(TextColors.GREEN, item.getValue().getKey().toString()));
 			list.add(Text.of(TextColors.YELLOW, "  - break: ", TextColors.WHITE, item.getValue().getNode("break").getBoolean()));
 			list.add(Text.of(TextColors.YELLOW, "  - craft: ", TextColors.WHITE, item.getValue().getNode("craft").getBoolean()));

@@ -62,11 +62,16 @@ public class Common {
 				.addExample("/sban set world minecraft:stone")
 				.addExample("/sban set minecraft:wool:5");
 		
+		Help sbanWhatsThis = new Help("sban whatsthis", "whatsthis", "Displays the itemType of the ItemStack player is holding")
+				.setPermission("stackban.cmd.sban.whatsthis")
+				.addExample("/sban whatsthis");
+
 		Help sban = new Help("sban", "sban", "Base command for Stack Ban")
 				.setPermission("stackban.cmd.sban")
 				.addChild(sbanSet)
 				.addChild(sbanRemove)
 				.addChild(sbanLog)
+				.addChild(sbanWhatsThis)
 				.addChild(sbanList);
 		
 		Help.register(sban);
@@ -77,10 +82,14 @@ public class Common {
 		CommentedConfigurationNode config = configManager.getConfig();
 
 		if(configName.equalsIgnoreCase(Main.getPlugin().getId())) {
-			CommentedConfigurationNode node = config.getNode("console_log");
-
-			if (node.isVirtual()) {
-				node.setValue(false).setComment("Log to console when player triggers banned item event");
+			if (config.getNode("console_log").isVirtual()) {
+				config.getNode("console_log").setValue(false).setComment("Log to console when player triggers banned item event");
+			}
+			if (config.getNode("log_message").isVirtual()) {
+				config.getNode("log_message").setValue("%PLAYER% attempted to %ACTION% banned item: %ITEM%");
+			}
+			if (config.getNode("player_message").isVirtual()) {
+				config.getNode("player_message").setValue("&cCannot %ACTION% banned item: &e%ITEM%");
 			}
 		} else if(configName.equalsIgnoreCase("global")) {
 			CommentedConfigurationNode node = config.getNode("items");

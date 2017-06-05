@@ -1,6 +1,8 @@
 package com.gmail.trentech.stackban;
 
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
@@ -19,23 +21,29 @@ import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.item.inventory.UseItemStackEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
 import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.entity.PlayerInventory;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
+import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.World;
 
 import com.gmail.trentech.pjc.core.ConfigManager;
+import com.gmail.trentech.stackban.init.Action;
 import com.gmail.trentech.stackban.init.Common;
-import com.gmail.trentech.stackban.utils.Action;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
 public class EventListener {
 
+	private static ConcurrentHashMap<UUID, Action> notifications = new ConcurrentHashMap<>();
+	
 	@Listener
 	public void onLoadWorldEvent(LoadWorldEvent event) {
 		String worldName = event.getTargetWorld().getName();
@@ -66,8 +74,6 @@ public class EventListener {
 			if (isBanned(player, itemStack, Action.PLACE)) {
 				log(player, itemStack, Action.PLACE);
 
-				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
-
 				event.setCancelled(true);
 			}
 		}
@@ -95,8 +101,6 @@ public class EventListener {
 
 			if (isBanned(player, itemStack, Action.MODIFY)) {
 				log(player, itemStack, Action.MODIFY);
-
-				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
 
 				event.setCancelled(true);
 			}
@@ -126,8 +130,6 @@ public class EventListener {
 			if (isBanned(player, itemStack, Action.BREAK)) {
 				log(player, itemStack, Action.BREAK);
 
-				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
-
 				event.setCancelled(true);
 			}
 		}
@@ -147,9 +149,8 @@ public class EventListener {
 				if (isBanned(player, optionalItem.get(), Action.CRAFT)) {
 					log(player, optionalItem.get(), Action.CRAFT);
 
-					player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
-
 					transaction.setValid(false);
+					event.setCancelled(true);
 				}
 			}
 		}
@@ -163,17 +164,45 @@ public class EventListener {
 
 		for (SlotTransaction transaction : event.getTransactions()) {
 			ItemStack itemStack = transaction.getFinal().createStack();
-
+			
 			if (itemStack.getItem().equals(ItemTypes.NONE)) {
 				continue;
 			}
 
 			if (isBanned(player, itemStack, Action.HOLD)) {
+				PlayerInventory inv = player.getInventory().query(PlayerInventory.class);
+
+				for (Inventory item : inv.getHotbar().slots()) {
+					Slot slot = (Slot) item;
+
+					Optional<ItemStack> peek = slot.peek();
+
+					if(!peek.isPresent()) {
+						continue;
+					}
+					
+					if (isBanned(player, peek.get(), Action.HOLD)) {
+						slot.clear();
+					}
+				}
+				
+				for (Inventory item : inv.getMain().slots()) {
+					Slot slot = (Slot) item;
+
+					Optional<ItemStack> peek = slot.peek();
+
+					if(!peek.isPresent()) {
+						continue;
+					}
+					
+					if (isBanned(player, peek.get(), Action.HOLD)) {
+						slot.clear();
+					}
+				}
+				
 				log(player, itemStack, Action.HOLD);
-
-				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
-
-				Sponge.getScheduler().createTaskBuilder().delayTicks(2).execute(c -> transaction.getSlot().clear()).submit(Main.getPlugin());
+				
+				return;
 			}
 		}
 	}
@@ -193,10 +222,10 @@ public class EventListener {
 
 			if (isBanned(player, itemStack, Action.PICKUP)) {
 				log(player, itemStack, Action.PICKUP);
-
-				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
-
-				Sponge.getScheduler().createTaskBuilder().delayTicks(2).execute(c -> transaction.getSlot().clear()).submit(Main.getPlugin());
+				
+				event.setCancelled(true);
+				
+				return;
 			}
 		}
 	}
@@ -212,19 +241,14 @@ public class EventListener {
 
 			if (isBanned(player, itemStack, Action.DROP)) {
 				log(player, itemStack, Action.DROP);
-
-				player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
-
+				
 				event.setCancelled(true);
 			}
 		}
 	}
-	
-	// NOT WORKING
+
 	@Listener
 	public void onUseItemStackEvent(UseItemStackEvent.Start event, @Root Player player) {
-		System.out.println("USE");
-		
 		if (player.hasPermission("stackban.admin")) {
 			return;
 		}
@@ -237,8 +261,6 @@ public class EventListener {
 
 		if (isBanned(player, itemStack, Action.USE)) {
 			log(player, itemStack, Action.USE);
-
-			player.sendMessage(Text.of(TextColors.GOLD, "This item is banned"));
 
 			event.setCancelled(true);
 		}
@@ -277,33 +299,43 @@ public class EventListener {
 
 		return false;
 	}
+	
+	public static void log(Player player, ItemStack itemStack, Action action) {
+		UUID uuid = player.getUniqueId();
 
-	public void log(Player user, ItemStack itemStack, Action action) {
-		if (!ConfigManager.get(Main.getPlugin()).getConfig().getNode("console_log").getBoolean()) {
-			return;
-		}
-		
-		String itemType = itemStack.getItem().getId();
+		if(!notifications.containsKey(uuid)) {
+			notifications.put(uuid, action);
 
-		DataContainer container = itemStack.toContainer();
-		DataQuery query = DataQuery.of('/', "UnsafeDamage");
+			ConfigurationNode config = ConfigManager.get(Main.getPlugin()).getConfig();
+			
+			player.sendMessage(TextSerializers.FORMATTING_CODE.deserialize(config.getNode("player_message").getString().replaceAll("%ITEM%", itemStack.getTranslation().get()).replaceAll("%ACTION%", action.getName())));
 
-		int unsafeDamage = Integer.parseInt(container.get(query).get().toString());
+			if (config.getNode("console_log").getBoolean()) {
+				String itemType = itemStack.getItem().getId();
 
-		String message = action.getMessage().replaceAll("%PLAYER%", user.getName());
-		
-		if (unsafeDamage != 0) {
-			message = message.replaceAll("%ITEM%", itemType + ":" + container.get(query).get().toString());
-		} else {
-			message = message.replaceAll("%ITEM%", itemType);
-		}
+				DataContainer container = itemStack.toContainer();
+				DataQuery query = DataQuery.of('/', "UnsafeDamage");
 
-		Main.instance().getLog().info(message);
+				int unsafeDamage = Integer.parseInt(container.get(query).get().toString());
 
-		for (Player player : Sponge.getServer().getOnlinePlayers()) {
-			if (player.hasPermission("stackban.log")) {
-				player.sendMessage(Text.of(TextStyles.ITALIC, TextColors.GRAY, message));
+				String message = config.getNode("log_message").getString().replaceAll("%PLAYER%", player.getName()).replaceAll("%ACTION%", action.getName());
+				
+				if (unsafeDamage != 0) {
+					message = message.replaceAll("%ITEM%", itemType + ":" + container.get(query).get().toString());
+				} else {
+					message = message.replaceAll("%ITEM%", itemType);
+				}
+
+				Main.instance().getLog().info(message);
+
+				for (Player p : Sponge.getServer().getOnlinePlayers()) {
+					if (p.hasPermission("stackban.log")) {
+						p.sendMessage(Text.of(TextStyles.ITALIC, TextColors.GRAY, message));
+					}
+				}
 			}
+
+			Task.builder().delayTicks(40).execute(c -> { notifications.remove(uuid);}).submit(Main.getPlugin());
 		}
 	}
 }

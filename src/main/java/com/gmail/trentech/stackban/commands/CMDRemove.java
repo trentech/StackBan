@@ -9,9 +9,9 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
 
-import com.gmail.trentech.pjc.Main;
 import com.gmail.trentech.pjc.core.ConfigManager;
 import com.gmail.trentech.pjc.help.Help;
+import com.gmail.trentech.stackban.Main;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
@@ -20,13 +20,13 @@ public class CMDRemove implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		if (!args.hasAny("world")) {
-			Help help = Help.get("sban log").get();
+			Help help = Help.get("sban remove").get();
 			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
 		}
 		String worldName = args.<String>getOne("world").get();
 
 		if (!args.hasAny("itemType[:id]")) {
-			Help help = Help.get("sban log").get();
+			Help help = Help.get("sban remove").get();
 			throw new CommandException(Text.builder().onClick(TextActions.executeCallback(help.execute())).append(help.getUsageText()).build(), false);
 		}
 		String itemType = args.<String>getOne("itemType[:id]").get();

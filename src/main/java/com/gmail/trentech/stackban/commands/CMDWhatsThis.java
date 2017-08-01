@@ -36,7 +36,7 @@ public class CMDWhatsThis implements CommandExecutor {
 
 		int unsafeDamage = Integer.parseInt(container.get(query).get().toString());
 
-		String item = itemStack.getItem().getId();
+		String item = itemStack.getType().getId();
 
 		if (unsafeDamage != 0) {
 			item = item + ":" + unsafeDamage;

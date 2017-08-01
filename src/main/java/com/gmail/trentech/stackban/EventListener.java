@@ -165,7 +165,7 @@ public class EventListener {
 		for (SlotTransaction transaction : event.getTransactions()) {
 			ItemStack itemStack = transaction.getFinal().createStack();
 			
-			if (itemStack.getItem().equals(ItemTypes.NONE)) {
+			if (itemStack.getType().equals(ItemTypes.NONE)) {
 				continue;
 			}
 
@@ -216,7 +216,7 @@ public class EventListener {
 		for (SlotTransaction transaction : event.getTransactions()) {
 			ItemStack itemStack = transaction.getFinal().createStack();
 
-			if (itemStack.getItem().equals(ItemTypes.NONE)) {
+			if (itemStack.getType().equals(ItemTypes.NONE)) {
 				continue;
 			}
 
@@ -235,7 +235,7 @@ public class EventListener {
 		for (ItemStackSnapshot snapshot : event.getDroppedItems()) {
 			ItemStack itemStack = snapshot.createStack();
 
-			if (itemStack.getItem().equals(ItemTypes.NONE)) {
+			if (itemStack.getType().equals(ItemTypes.NONE)) {
 				continue;
 			}
 
@@ -255,7 +255,7 @@ public class EventListener {
 
 		ItemStack itemStack = event.getItemStackInUse().createStack();
 
-		if (itemStack.getItem().equals(ItemTypes.NONE)) {
+		if (itemStack.getType().equals(ItemTypes.NONE)) {
 			return;
 		}
 
@@ -268,7 +268,7 @@ public class EventListener {
 
 	private boolean isBanned(Player player, ItemStack itemStack, Action action) {
 		World world = player.getWorld();
-		String itemType = itemStack.getItem().getId();
+		String itemType = itemStack.getType().getId();
 
 		DataContainer container = itemStack.toContainer();
 		DataQuery query = DataQuery.of('/', "UnsafeDamage");
@@ -311,7 +311,7 @@ public class EventListener {
 			player.sendMessage(TextSerializers.FORMATTING_CODE.deserialize(config.getNode("player_message").getString().replaceAll("%ITEM%", itemStack.getTranslation().get()).replaceAll("%ACTION%", action.getName())));
 
 			if (config.getNode("console_log").getBoolean()) {
-				String itemType = itemStack.getItem().getId();
+				String itemType = itemStack.getType().getId();
 
 				DataContainer container = itemStack.toContainer();
 				DataQuery query = DataQuery.of('/', "UnsafeDamage");

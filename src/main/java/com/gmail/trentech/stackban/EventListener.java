@@ -140,7 +140,7 @@ public class EventListener {
 		if (player.hasPermission("stackban.admin")) {
 			return;
 		}
-		
+
 		for(SlotTransaction transaction : event.getTransactions()) {
 			Slot slot = transaction.getSlot();
 			Optional<ItemStack> optionalItem = slot.peek();
@@ -273,7 +273,7 @@ public class EventListener {
 		DataContainer container = itemStack.toContainer();
 		DataQuery query = DataQuery.of('/', "UnsafeDamage");
 
-		if (player.hasPermission("stackban.bypass." + itemType + ":" + container.get(query).get().toString()) || player.hasPermission("itemStack.bypass." + itemType)) {
+		if (player.hasPermission("stackban.bypass." + itemType + ":" + container.get(query).get().toString()) || player.hasPermission("stackban.bypass." + itemType)) {
 			return false;
 		}
 		

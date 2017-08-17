@@ -17,6 +17,7 @@ import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.filter.cause.Root;
 import org.spongepowered.api.event.item.inventory.AffectSlotEvent;
 import org.spongepowered.api.event.item.inventory.ChangeInventoryEvent;
+import org.spongepowered.api.event.item.inventory.ClickInventoryEvent;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.event.item.inventory.UseItemStackEvent;
 import org.spongepowered.api.event.world.LoadWorldEvent;
@@ -25,6 +26,7 @@ import org.spongepowered.api.item.inventory.Inventory;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.Slot;
+import org.spongepowered.api.item.inventory.crafting.CraftingInventory;
 import org.spongepowered.api.item.inventory.entity.PlayerInventory;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.scheduler.Task;
@@ -135,6 +137,29 @@ public class EventListener {
 		}
 	}
 
+//	@Listener(order = Order.POST)
+//	public void onClickInventoryEvent(ClickInventoryEvent event, @Root Player player) {
+//		if (player.hasPermission("stackban.admin")) {
+//			return;
+//		}
+//
+//		Inventory inventory = event.getTargetInventory();
+//		CraftingInventory crafting = inventory.query(CraftingInventory.class);
+//		
+//		for(Inventory s : crafting.slots()) {
+//			Slot slot = (Slot) s;
+//			
+//			Optional<ItemStack> optionalItem = slot.peek();
+//			
+//			if(optionalItem.isPresent()) {
+//				if (isBanned(player, optionalItem.get(), Action.CRAFT)) {
+//					log(player, optionalItem.get(), Action.CRAFT);
+//					event.setCancelled(true);
+//				}
+//			}
+//		}
+//	}
+	
 	@Listener(order = Order.POST)
 	public void onAffectSlotEvent(AffectSlotEvent event, @Root Player player) {
 		if (player.hasPermission("stackban.admin")) {

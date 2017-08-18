@@ -6,7 +6,7 @@ plugins {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-archivesBaseName = "stackban-${project.apiVersion.split("-")[0]}-${BUILD_NUMBER}"
+archivesBaseName = "stackban-${project.apiVersion.split("-")[0]}-System.getenv("BUILD_NUMBER")"
 
 repositories {
     mavenCentral()

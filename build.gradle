@@ -36,9 +36,8 @@ configurations {
 }
 
 dependencies {
-    compile "org.spongepowered:spongeapi:${project.apiVersion}"
-    compile 'com.github.trentech:ProjectCore:6.x-SNAPSHOT'
-    shade "com.github.Flibio:Updatifier:-SNAPSHOT:api"
+    compile 'org.spongepowered:spongeapi:${project.apiVersion}'
+    compile 'com.github.trentech:ProjectCore:7.x-SNAPSHOT'
 }
 
 jar {

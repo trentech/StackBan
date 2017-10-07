@@ -1,6 +1,7 @@
 plugins {
   id 'maven'
   id 'ninja.miserable.blossom' version '1.0.1'
+  id 'signing'
 }
 
 sourceCompatibility = 1.8
@@ -38,6 +39,10 @@ configurations {
 dependencies {
     compile 'org.spongepowered:spongeapi:${project.apiVersion}'
     compile 'com.github.trentech:ProjectCore:7.x-SNAPSHOT'
+}
+
+signing {
+    sign configurations.archives
 }
 
 jar {

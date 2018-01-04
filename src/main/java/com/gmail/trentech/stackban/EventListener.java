@@ -29,6 +29,7 @@ import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.item.inventory.Slot;
 import org.spongepowered.api.item.inventory.crafting.CraftingOutput;
 import org.spongepowered.api.item.inventory.entity.PlayerInventory;
+import org.spongepowered.api.item.inventory.query.QueryOperationTypes;
 import org.spongepowered.api.item.inventory.transaction.SlotTransaction;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
@@ -148,7 +149,7 @@ public class EventListener {
 			return;
 		}
 		
-		CraftingOutput output = inventory.query(CraftingOutput.class);
+		CraftingOutput output = inventory.query(QueryOperationTypes.INVENTORY_TYPE.of(CraftingOutput.class));
 		
 		for(Inventory s : output.slots()) {
 			Slot slot = (Slot) s;
@@ -199,8 +200,8 @@ public class EventListener {
 			}
 
 			if (isBanned(player, itemStack, Action.HOLD)) {
-				PlayerInventory inv = player.getInventory().query(PlayerInventory.class);
-
+				PlayerInventory inv = player.getInventory().query(QueryOperationTypes.INVENTORY_TYPE.of(PlayerInventory.class));
+				
 				for (Inventory item : inv.getHotbar().slots()) {
 					Slot slot = (Slot) item;
 
